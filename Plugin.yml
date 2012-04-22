@@ -1,0 +1,19 @@
+name: PlayerNotes
+version: 1.0.0
+description: This plugin lets people assign notes to players. When someone with a note logs in, the note will be shown to those with access.
+author: mortenn
+main: no.runsafe.PlayerNotes.Plugin
+database: false
+
+commands:
+  playernote:
+    description: Manage player notes
+    aliases: [note,pn]
+
+permissions:
+  playernotes.show.*:
+    description: Gives access to all note tiers
+    default: false
+  playernotes.set.*:
+    description: Access to set all player note tiers
+    default: false
