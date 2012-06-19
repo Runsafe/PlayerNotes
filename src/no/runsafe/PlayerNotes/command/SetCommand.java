@@ -40,7 +40,7 @@ public class SetCommand extends RunsafeCommand
 	{
 		RunsafePlayer player = getPlayer();
 		String tier = getArg("tier");
-		String note = StringUtils.join(Arrays.copyOfRange(args, 1, args.length - 1), " ");
+		String note = StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " ");
 
 		manager.setNoteForPlayer(player, tier, note);
 
