@@ -1,47 +1,57 @@
 package no.runsafe.PlayerNotes.command;
 
 import no.runsafe.PlayerNotes.NoteManager;
+import no.runsafe.framework.command.RunsafeCommand;
+import no.runsafe.framework.output.Console;
+import no.runsafe.framework.server.chunk.RunsafeChunk;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 
 import java.util.Arrays;
 
-public class SetCommand extends NoteSubCommand
+public class SetCommand extends RunsafeCommand
 {
 	public SetCommand(NoteManager manager)
 	{
-		super("set");
+		super("set", null, "tier", "note");
 		this.manager = manager;
 	}
 
 	@Override
-	public boolean Execute(RunsafePlayer player, String[] args)
+	public String requiredPermission()
 	{
-		if (args == null || args.length < 2)
-			return false;
-
-		String tier = args[0];
-
-		if(player.hasPermission("playernotes.set." + tier))
-			Execute(args);
-		else
-			player.sendMessage(ChatColor.RED + "Access denied to that command.");
-
-		return true;
+		return "playernotes.set." + permissionTier;
 	}
 
 	@Override
-	public boolean Execute(String[] args)
+	public boolean CanExecute(RunsafePlayer executor, String[] args)
 	{
-		if (args == null || args.length < 2)
-			return false;
+		if(args == null || args.length == 0)
+		{
+			permissionTier = "";
+			return true;
+		}
+		permissionTier = args[0];
+		return executor.hasPermission("playernotes.set." + args[0]);
+	}
 
-		String tier = args[0];
-		String note = StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " ");
-		manager.setNoteForPlayer(getPlayer(), tier, note);
-		return true;
+	public String OnExecute(String[] args)
+	{
+		RunsafePlayer player = getPlayer();
+		String tier = getArg("tier");
+		String note = StringUtils.join(Arrays.copyOfRange(args, 1, args.length - 1), " ");
+
+		manager.setNoteForPlayer(player, tier, note);
+
+		return String.format(("%s note set for %s."), tier, player.getName());
+	}
+
+	private RunsafePlayer getPlayer()
+	{
+		return new RunsafePlayer(superCommand.getArg("player"));
 	}
 
 	private NoteManager manager;
+	protected String permissionTier;
 }

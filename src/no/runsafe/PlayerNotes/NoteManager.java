@@ -3,7 +3,7 @@ package no.runsafe.PlayerNotes;
 import no.runsafe.PlayerNotes.database.NoteRepository;
 import no.runsafe.PlayerNotes.database.PlayerNotes;
 import no.runsafe.framework.output.IOutput;
-import no.runsafe.framework.server.player.IPlayerByPermissionProvider;
+import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -13,17 +13,16 @@ import java.util.logging.Level;
 
 public class NoteManager
 {
-	public NoteManager(NoteRepository repository, IPlayerByPermissionProvider playerProvider, IOutput output)
+	public NoteManager(NoteRepository repository, RunsafeServer server, IOutput output)
 	{
 		this.repository = repository;
-		this.provider = playerProvider;
+		this.server = server;
 		this.output = output;
 	}
 
 	public void setNoteForPlayer(RunsafePlayer player, String tier, String note)
 	{
 		PlayerNotes notes = repository.get(player);
-		provider.watchPermission(getPermission(tier));
 		notes.getNotes().put(tier, note);
 		repository.persist(notes);
 	}
@@ -53,10 +52,9 @@ public class NoteManager
 				String message = formatMessage(tier, player.getName(), notes.get(tier));
 				output.outputColoredToConsole(message, Level.INFO);
 				String permission = getPermission(tier);
-				if (provider.watchPermission(permission))
-					provider.checkPlayer(player);
-				for (RunsafePlayer target : provider.getPlayersWithPermission(permission))
-					target.sendMessage(message);
+				for (RunsafePlayer target : server.getOnlinePlayers())
+					if(target.hasPermission(permission))
+						target.sendMessage(message);
 			}
 		}
 	}
@@ -72,6 +70,6 @@ public class NoteManager
 	}
 
 	private NoteRepository repository;
-	private IPlayerByPermissionProvider provider;
+	private RunsafeServer server;
 	private IOutput output;
 }

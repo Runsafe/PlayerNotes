@@ -2,7 +2,6 @@ package no.runsafe.PlayerNotes.event;
 
 import no.runsafe.PlayerNotes.NoteManager;
 import no.runsafe.framework.event.player.IPlayerLoginEvent;
-import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.event.player.RunsafePlayerLoginEvent;
 
 public class PlayerLogin implements IPlayerLoginEvent
