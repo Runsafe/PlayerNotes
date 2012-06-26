@@ -2,27 +2,22 @@ package no.runsafe.PlayerNotes.command;
 
 import no.runsafe.PlayerNotes.NoteManager;
 import no.runsafe.framework.command.RunsafeCommand;
-import no.runsafe.framework.output.Console;
+import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
-import org.bukkit.ChatColor;
 
-public class ClearCommand extends RunsafeCommand
-{
-	public ClearCommand(NoteManager manager)
-	{
+public class ClearCommand extends RunsafeCommand {
+	public ClearCommand(NoteManager manager) {
 		super("clear", null);
 		this.manager = manager;
 	}
 
 	@Override
-	public String requiredPermission()
-	{
+	public String requiredPermission() {
 		return "playernotes.set." + permissionTier;
 	}
 
 	@Override
-	public boolean CanExecute(RunsafePlayer executor, String[] args)
-	{
+	public boolean CanExecute(RunsafePlayer executor, String[] args) {
 		if(args == null || args.length == 0)
 			permissionTier = "*";
 		else
@@ -33,29 +28,23 @@ public class ClearCommand extends RunsafeCommand
 
 	@Override
 	// Override due to tier being optional
-	public String getCommandParams()
-	{
+	public String getCommandParams() {
 		return superCommand.getCommandParams() + " clear [tier]";
 	}
 
 	@Override
-	public String OnExecute(String[] args)
-	{
-		if(args == null || args.length == 0)
-		{
+	public String OnExecute(RunsafePlayer executor, String[] args) {
+		if(args == null || args.length == 0) {
 			manager.clearAllNotesForPlayer(getPlayer());
 			return String.format("All notes for %s cleared.", getPlayer().getName());
-		}
-		else
-		{
+		} else {
 			manager.clearNoteForPlayer(getPlayer(), args[0]);
 			return String.format("%s note for %s cleared.", args[0], getPlayer().getName());
 		}
 	}
 
-	private RunsafePlayer getPlayer()
-	{
-		return new RunsafePlayer(superCommand.getArg("player"));
+	private RunsafePlayer getPlayer() {
+		return RunsafeServer.Instance.getPlayer(superCommand.getArg("player"));
 	}
 
 	private String permissionTier;
