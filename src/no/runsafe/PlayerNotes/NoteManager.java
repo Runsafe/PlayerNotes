@@ -59,6 +59,24 @@ public class NoteManager
 		}
 	}
 
+	public String getNotes(RunsafePlayer player, RunsafePlayer viewer)
+	{
+		StringBuilder result = new StringBuilder();
+		HashMap<String, String> notes = repository.get(player).getNotes();
+		if (notes != null && notes.size() > 0)
+		{
+			for (String tier : notes.keySet())
+			{
+				if(viewer == null || viewer.hasPermission(getPermission(tier)))
+				{
+					result.append(formatMessage(tier, player.getName(), notes.get(tier)));
+					result.append("\n");
+				}
+			}
+		}
+		return result.toString();
+	}
+
 	private String getPermission(String tier)
 	{
 		return String.format("playernotes.show.%s", tier);

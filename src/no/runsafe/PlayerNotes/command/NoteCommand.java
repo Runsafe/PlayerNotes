@@ -9,5 +9,6 @@ public class NoteCommand extends RunsafeCommand {
 
 		addSubCommand(new SetCommand(manager));
 		addSubCommand(new ClearCommand(manager));
+		addSubCommand(new ListCommand(manager));
 	}
 }
