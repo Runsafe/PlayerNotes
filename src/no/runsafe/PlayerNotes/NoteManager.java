@@ -6,7 +6,6 @@ import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import org.bukkit.ChatColor;
-import org.bukkit.Server;
 
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -53,7 +52,7 @@ public class NoteManager
 				output.outputColoredToConsole(message, Level.INFO);
 				String permission = getPermission(tier);
 				for (RunsafePlayer target : server.getOnlinePlayers())
-					if(target.hasPermission(permission))
+					if (target.hasPermission(permission))
 						target.sendMessage(message);
 			}
 		}
@@ -67,7 +66,7 @@ public class NoteManager
 		{
 			for (String tier : notes.keySet())
 			{
-				if(viewer == null || viewer.hasPermission(getPermission(tier)))
+				if (viewer == null || viewer.hasPermission(getPermission(tier)))
 				{
 					result.append(formatMessage(tier, player.getName(), notes.get(tier)));
 					result.append("\n");
