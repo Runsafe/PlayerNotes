@@ -1,9 +1,9 @@
 package no.runsafe.PlayerNotes;
 
+import no.runsafe.PlayerNotes.command.NoteCommand;
+import no.runsafe.PlayerNotes.database.NoteRepository;
+import no.runsafe.PlayerNotes.event.PlayerJoin;
 import no.runsafe.framework.RunsafePlugin;
-import no.runsafe.PlayerNotes.database.*;
-import no.runsafe.PlayerNotes.command.*;
-import no.runsafe.PlayerNotes.event.*;
 
 public class Plugin extends RunsafePlugin
 {
@@ -12,7 +12,7 @@ public class Plugin extends RunsafePlugin
 	{
 		addComponent(NoteRepository.class);
 		addComponent(NoteManager.class);
-		addComponent(getInstance(NoteCommand.class));
+		addComponent(NoteCommand.class);
 		addComponent(PlayerJoin.class);
 	}
 }

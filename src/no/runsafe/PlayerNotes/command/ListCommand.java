@@ -1,27 +1,27 @@
 package no.runsafe.PlayerNotes.command;
 
 import no.runsafe.PlayerNotes.NoteManager;
-import no.runsafe.PlayerNotes.database.NoteRepository;
-import no.runsafe.framework.command.RunsafeCommand;
-import no.runsafe.framework.output.IOutput;
+import no.runsafe.framework.command.RunsafeAsyncCommand;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.framework.timer.IScheduler;
 
-import java.util.HashMap;
-import java.util.logging.Level;
-
-public class ListCommand extends RunsafeCommand {
-	public ListCommand(NoteManager manager) {
-		super("list", null);
+public class ListCommand extends RunsafeAsyncCommand
+{
+	public ListCommand(NoteManager manager, IScheduler scheduler)
+	{
+		super("list", scheduler);
 		this.manager = manager;
 	}
 
 	@Override
-	public String OnExecute(RunsafePlayer executor, String[] args) {
+	public String OnExecute(RunsafePlayer executor, String[] args)
+	{
 		return manager.getNotes(getPlayer(), executor);
 	}
 
-	private RunsafePlayer getPlayer() {
+	private RunsafePlayer getPlayer()
+	{
 		return RunsafeServer.Instance.getPlayer(superCommand.getArg("player"));
 	}
 

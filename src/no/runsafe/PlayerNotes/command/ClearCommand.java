@@ -1,13 +1,16 @@
 package no.runsafe.PlayerNotes.command;
 
 import no.runsafe.PlayerNotes.NoteManager;
+import no.runsafe.framework.command.RunsafeAsyncCommand;
 import no.runsafe.framework.command.RunsafeCommand;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.framework.timer.IScheduler;
 
-public class ClearCommand extends RunsafeCommand {
-	public ClearCommand(NoteManager manager) {
-		super("clear", null);
+public class ClearCommand extends RunsafeAsyncCommand
+{
+	public ClearCommand(NoteManager manager, IScheduler scheduler) {
+		super("clear", scheduler);
 		this.manager = manager;
 	}
 
