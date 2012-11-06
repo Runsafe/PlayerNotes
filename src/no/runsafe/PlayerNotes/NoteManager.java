@@ -86,7 +86,7 @@ public class NoteManager
 		return String.format("%s[PN:%s] %s%s%s logged in: %s", ChatColor.BLUE, tier, ChatColor.LIGHT_PURPLE, player, ChatColor.YELLOW, message);
 	}
 
-	private NoteRepository repository;
-	private RunsafeServer server;
-	private IOutput output;
+	private final NoteRepository repository;
+	private final RunsafeServer server;
+	private final IOutput output;
 }

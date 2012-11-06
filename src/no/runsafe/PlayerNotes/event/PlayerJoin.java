@@ -19,5 +19,5 @@ public class PlayerJoin implements IPlayerJoinEvent, IAsyncEvent
 		manager.sendNotices(event.getPlayer());
 	}
 
-	private NoteManager manager;
+	private final NoteManager manager;
 }

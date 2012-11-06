@@ -25,6 +25,6 @@ public class ListCommand extends RunsafeAsyncCommand
 		return RunsafeServer.Instance.getPlayer(superCommand.getArg("player"));
 	}
 
-	private NoteManager manager;
+	private final NoteManager manager;
 
 }

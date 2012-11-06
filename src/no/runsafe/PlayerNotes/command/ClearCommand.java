@@ -51,5 +51,5 @@ public class ClearCommand extends RunsafeAsyncCommand
 	}
 
 	private String permissionTier;
-	private NoteManager manager;
+	private final NoteManager manager;
 }

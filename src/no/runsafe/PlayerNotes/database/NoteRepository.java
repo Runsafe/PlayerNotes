@@ -102,6 +102,6 @@ public class NoteRepository implements IRepository<PlayerNotes, RunsafePlayer>
 		}
 	}
 
-	private IDatabase database;
-	private IOutput output;
+	private final IDatabase database;
+	private final IOutput output;
 }
