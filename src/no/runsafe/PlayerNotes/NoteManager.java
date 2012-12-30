@@ -83,7 +83,7 @@ public class NoteManager
 
 	private String formatMessage(String tier, String player, String message)
 	{
-		return String.format("%s[PN:%s] %s%s%s logged in: %s", ChatColor.BLUE, tier, ChatColor.LIGHT_PURPLE, player, ChatColor.YELLOW, message);
+		return String.format("%1$s[PN:%2$s] %3$s%4$s%5$s logged in: %6$s", ChatColor.BLUE, tier, ChatColor.LIGHT_PURPLE, player, ChatColor.YELLOW, message);
 	}
 
 	private final NoteRepository repository;
