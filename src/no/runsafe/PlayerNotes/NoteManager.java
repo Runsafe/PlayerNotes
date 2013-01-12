@@ -50,7 +50,7 @@ public class NoteManager implements IConfigurationChanged
 		{
 			for (String tier : notes.keySet())
 			{
-				String message = formatMessage(tier, player.getName(), notes.get(tier));
+				String message = formatMessage(tier, player, notes.get(tier));
 				output.outputColoredToConsole(message, Level.INFO);
 				String permission = getPermission(tier);
 				for (RunsafePlayer target : server.getOnlinePlayers())
@@ -70,7 +70,7 @@ public class NoteManager implements IConfigurationChanged
 			{
 				if (viewer == null || viewer.hasPermission(getPermission(tier)))
 				{
-					result.append(formatMessage(tier, player.getName(), notes.get(tier)));
+					result.append(formatMessage(tier, player, notes.get(tier)));
 					result.append("\n");
 				}
 			}
@@ -89,9 +89,9 @@ public class NoteManager implements IConfigurationChanged
 		return String.format("playernotes.show.%s", tier);
 	}
 
-	private String formatMessage(String tier, String player, String message)
+	private String formatMessage(String tier, RunsafePlayer player, String message)
 	{
-		return ChatColour.ToMinecraft(String.format(format, tier, player, message));
+		return ChatColour.ToMinecraft(String.format(format, tier, player.getPrettyName(), message));
 	}
 
 	private final NoteRepository repository;

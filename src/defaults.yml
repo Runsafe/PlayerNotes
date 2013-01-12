@@ -1,1 +1,1 @@
-broadcast.format: "&9[PN:%1$s] &d3%2$s&e logged in: %3$s"
+broadcast.format: "&9[PN:%1$s] &d%2$s&e logged in: %3$s"
