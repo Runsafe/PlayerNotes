@@ -5,12 +5,12 @@ import no.runsafe.PlayerNotes.database.PlayerNotes;
 import no.runsafe.framework.configuration.IConfiguration;
 import no.runsafe.framework.event.IConfigurationChanged;
 import no.runsafe.framework.output.ChatColour;
+import no.runsafe.framework.output.ConsoleColors;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
 
 import java.util.HashMap;
-import java.util.logging.Level;
 
 public class NoteManager implements IConfigurationChanged
 {
@@ -102,7 +102,12 @@ public class NoteManager implements IConfigurationChanged
 
 	private String formatMessageForConsole(String tier, RunsafePlayer player, String message)
 	{
-		return ChatColour.ToConsole(String.format(consoleFormat, tier, player.getPrettyName(), message));
+		return ChatColour.ToConsole(String.format(
+			consoleFormat,
+			tier,
+			ConsoleColors.FromMinecraft(player.getPrettyName()),
+			message
+		));
 	}
 
 	private final NoteRepository repository;
