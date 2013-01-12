@@ -2,15 +2,17 @@ package no.runsafe.PlayerNotes;
 
 import no.runsafe.PlayerNotes.database.NoteRepository;
 import no.runsafe.PlayerNotes.database.PlayerNotes;
+import no.runsafe.framework.configuration.IConfiguration;
+import no.runsafe.framework.event.IConfigurationChanged;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
-import org.bukkit.ChatColor;
+import no.runsafe.framework.output.ChatColour;
 
 import java.util.HashMap;
 import java.util.logging.Level;
 
-public class NoteManager
+public class NoteManager implements IConfigurationChanged
 {
 	public NoteManager(NoteRepository repository, RunsafeServer server, IOutput output)
 	{
@@ -76,6 +78,12 @@ public class NoteManager
 		return result.toString();
 	}
 
+	@Override
+	public void OnConfigurationChanged(IConfiguration configuration)
+	{
+		format = configuration.getConfigValueAsString("broadcast.format");
+	}
+
 	private String getPermission(String tier)
 	{
 		return String.format("playernotes.show.%s", tier);
@@ -83,10 +91,11 @@ public class NoteManager
 
 	private String formatMessage(String tier, String player, String message)
 	{
-		return String.format("%1$s[PN:%2$s] %3$s%4$s%5$s logged in: %6$s", ChatColor.BLUE, tier, ChatColor.LIGHT_PURPLE, player, ChatColor.YELLOW, message);
+		return ChatColour.ToMinecraft(String.format(format, tier, player, message));
 	}
 
 	private final NoteRepository repository;
 	private final RunsafeServer server;
 	private final IOutput output;
+	private String format;
 }
