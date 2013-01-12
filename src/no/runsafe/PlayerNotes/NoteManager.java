@@ -4,10 +4,10 @@ import no.runsafe.PlayerNotes.database.NoteRepository;
 import no.runsafe.PlayerNotes.database.PlayerNotes;
 import no.runsafe.framework.configuration.IConfiguration;
 import no.runsafe.framework.event.IConfigurationChanged;
+import no.runsafe.framework.output.ChatColour;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
-import no.runsafe.framework.output.ChatColour;
 
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -50,8 +50,8 @@ public class NoteManager implements IConfigurationChanged
 		{
 			for (String tier : notes.keySet())
 			{
-				String message = formatMessage(tier, player, notes.get(tier));
-				output.outputColoredToConsole(message, Level.INFO);
+				String message = formatMessageForGame(tier, player, notes.get(tier));
+				output.write(formatMessageForConsole(tier, player, notes.get(tier)));
 				String permission = getPermission(tier);
 				for (RunsafePlayer target : server.getOnlinePlayers())
 					if (target.hasPermission(permission))
@@ -68,9 +68,14 @@ public class NoteManager implements IConfigurationChanged
 		{
 			for (String tier : notes.keySet())
 			{
-				if (viewer == null || viewer.hasPermission(getPermission(tier)))
+				if (viewer == null)
 				{
-					result.append(formatMessage(tier, player, notes.get(tier)));
+					result.append(formatMessageForConsole(tier, player, notes.get(tier)));
+					result.append("\n");
+				}
+				else if (viewer.hasPermission(getPermission(tier)))
+				{
+					result.append(formatMessageForGame(tier, player, notes.get(tier)));
 					result.append("\n");
 				}
 			}
@@ -81,7 +86,8 @@ public class NoteManager implements IConfigurationChanged
 	@Override
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
-		format = configuration.getConfigValueAsString("broadcast.format");
+		gameFormat = configuration.getConfigValueAsString("broadcast.format.game");
+		consoleFormat = configuration.getConfigValueAsString("broadcast.format.console");
 	}
 
 	private String getPermission(String tier)
@@ -89,13 +95,19 @@ public class NoteManager implements IConfigurationChanged
 		return String.format("playernotes.show.%s", tier);
 	}
 
-	private String formatMessage(String tier, RunsafePlayer player, String message)
+	private String formatMessageForGame(String tier, RunsafePlayer player, String message)
 	{
-		return ChatColour.ToMinecraft(String.format(format, tier, player.getPrettyName(), message));
+		return ChatColour.ToMinecraft(String.format(gameFormat, tier, player.getPrettyName(), message));
+	}
+
+	private String formatMessageForConsole(String tier, RunsafePlayer player, String message)
+	{
+		return ChatColour.ToConsole(String.format(consoleFormat, tier, player.getPrettyName(), message));
 	}
 
 	private final NoteRepository repository;
 	private final RunsafeServer server;
 	private final IOutput output;
-	private String format;
+	private String gameFormat;
+	private String consoleFormat;
 }
