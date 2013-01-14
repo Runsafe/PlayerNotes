@@ -92,7 +92,7 @@ public class NoteManager implements IConfigurationChanged
 
 	private String getPermission(String tier)
 	{
-		return String.format("playernotes.show.%s", tier);
+		return String.format("runsafe.note.show.%s", tier);
 	}
 
 	private String formatMessageForGame(String tier, RunsafePlayer player, String message)

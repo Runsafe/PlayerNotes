@@ -10,8 +10,8 @@ public class NoteCommand extends Command // RunsafeCommand
 	{
 		super("note", "Manage player notes", "runsafe.notes", "player");
 
-		addSubCommand(new SetCommand(manager));
-		addSubCommand(new ClearCommand(manager));
-		addSubCommand(new ListCommand(manager));
+		addSubCommand(new SetCommand(manager, scheduler));
+		addSubCommand(new ClearCommand(manager, scheduler));
+		addSubCommand(new ListCommand(manager, scheduler));
 	}
 }
