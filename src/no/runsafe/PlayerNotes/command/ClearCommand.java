@@ -2,7 +2,6 @@ package no.runsafe.PlayerNotes.command;
 
 import no.runsafe.PlayerNotes.NoteManager;
 import no.runsafe.framework.command.AsyncCommand;
-import no.runsafe.framework.command.ExecutableCommand;
 import no.runsafe.framework.server.ICommandExecutor;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
@@ -19,7 +18,7 @@ public class ClearCommand extends AsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(ICommandExecutor executor, HashMap<String, String> params, String[] strings)
+	public String OnAsyncExecute(ICommandExecutor executor, HashMap<String, String> params)
 	{
 		RunsafePlayer target = RunsafeServer.Instance.getPlayer(params.get("player"));
 		if (params.get("tier").equals("*"))

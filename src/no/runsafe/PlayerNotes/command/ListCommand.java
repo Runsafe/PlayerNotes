@@ -18,7 +18,7 @@ public class ListCommand extends AsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(ICommandExecutor executor, HashMap<String, String> params, String[] args)
+	public String OnAsyncExecute(ICommandExecutor executor, HashMap<String, String> params)
 	{
 		RunsafePlayer viewer = null;
 		if (executor instanceof RunsafePlayer)

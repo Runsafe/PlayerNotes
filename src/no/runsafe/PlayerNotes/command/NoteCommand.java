@@ -4,7 +4,7 @@ import no.runsafe.PlayerNotes.NoteManager;
 import no.runsafe.framework.command.Command;
 import no.runsafe.framework.timer.IScheduler;
 
-public class NoteCommand extends Command // RunsafeCommand
+public class NoteCommand extends Command
 {
 	public NoteCommand(NoteManager manager, IScheduler scheduler)
 	{
