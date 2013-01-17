@@ -1,17 +1,19 @@
 package no.runsafe.PlayerNotes.database;
 
 import no.runsafe.framework.database.IDatabase;
-import no.runsafe.framework.database.IRepository;
+import no.runsafe.framework.database.Repository;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.player.RunsafePlayer;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 
-public class NoteRepository implements IRepository<PlayerNotes, RunsafePlayer>
+public class NoteRepository extends Repository
 {
 	public NoteRepository(IDatabase database, IOutput output)
 	{
@@ -19,7 +21,6 @@ public class NoteRepository implements IRepository<PlayerNotes, RunsafePlayer>
 		this.output = output;
 	}
 
-	@Override
 	public PlayerNotes get(RunsafePlayer player)
 	{
 		try
@@ -44,7 +45,6 @@ public class NoteRepository implements IRepository<PlayerNotes, RunsafePlayer>
 		return null;
 	}
 
-	@Override
 	public void persist(PlayerNotes playerNotes)
 	{
 		PlayerNotes notes = get(playerNotes.getPlayer());
@@ -87,7 +87,6 @@ public class NoteRepository implements IRepository<PlayerNotes, RunsafePlayer>
 		}
 	}
 
-	@Override
 	public void delete(PlayerNotes playerNotes)
 	{
 		try
@@ -100,6 +99,29 @@ public class NoteRepository implements IRepository<PlayerNotes, RunsafePlayer>
 		{
 			output.outputToConsole(e.getMessage(), Level.SEVERE);
 		}
+	}
+
+	@Override
+	public String getTableName()
+	{
+		return "playerNotes";
+	}
+
+	@Override
+	public HashMap<Integer, List<String>> getSchemaUpdateQueries()
+	{
+		HashMap<Integer, List<String>> queries = new HashMap<Integer, List<String>>();
+		List<String> sql = new ArrayList<String>();
+		sql.add(
+			"CREATE TABLE IF NOT EXISTS `playerNotes` (" +
+				"`playerName` varchar(50)NOT NULL," +
+				"`tier` varchar(50)NOT NULL," +
+				"`note` varchar(100)NOT NULL," +
+				"PRIMARY KEY(`playerName`,`tier`)" +
+				")"
+		);
+		queries.put(1, sql);
+		return queries;
 	}
 
 	private final IDatabase database;

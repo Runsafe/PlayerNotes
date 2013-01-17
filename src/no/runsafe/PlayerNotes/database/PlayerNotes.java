@@ -1,11 +1,10 @@
 package no.runsafe.PlayerNotes.database;
 
-import no.runsafe.framework.database.RunsafeEntity;
 import no.runsafe.framework.server.player.RunsafePlayer;
 
 import java.util.HashMap;
 
-public class PlayerNotes extends RunsafeEntity
+public class PlayerNotes
 {
 	public RunsafePlayer getPlayer()
 	{
