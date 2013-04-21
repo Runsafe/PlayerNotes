@@ -4,6 +4,11 @@ import java.util.Random;
 
 public class RandomGenerator
 {
+	public RandomGenerator()
+	{
+		this.random = new Random();
+	}
+
 	public String getRandomTag()
 	{
 		return String.format("%s %s.", this.randomAdjective(), this.randomNoun());
@@ -16,8 +21,10 @@ public class RandomGenerator
 
 	private String randomNoun()
 	{
-		return RandomGenerator.nouns[new Random().nextInt(RandomGenerator.nouns.length)];
+		return RandomGenerator.nouns[this.random.nextInt(RandomGenerator.nouns.length)];
 	}
+
+	private Random random;
 
 	private static String[] adjective = {
 			"Adorable",
