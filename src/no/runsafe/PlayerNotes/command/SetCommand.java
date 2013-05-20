@@ -25,7 +25,10 @@ public class SetCommand extends AsyncCommand
 	{
 		RunsafePlayer target = RunsafeServer.Instance.getPlayer(params.get("player"));
 		String note = (params.get("note").equalsIgnoreCase("random") ? randomGenerator.getRandomTag() : params.get("note"));
-		manager.setNoteForPlayer(target, params.get("tier"), note);
+		RunsafePlayer setter = null;
+		if (executor instanceof RunsafePlayer)
+			setter = (RunsafePlayer) executor;
+		manager.setNoteForPlayer(setter, target, params.get("tier"), note);
 		return String.format(("%s note set for %s."), params.get("tier"), target.getPrettyName());
 	}
 

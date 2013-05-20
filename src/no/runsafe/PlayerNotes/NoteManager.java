@@ -1,5 +1,6 @@
 package no.runsafe.PlayerNotes;
 
+import no.runsafe.PlayerNotes.database.Note;
 import no.runsafe.PlayerNotes.database.NoteRepository;
 import no.runsafe.PlayerNotes.database.PlayerNotes;
 import no.runsafe.framework.configuration.IConfiguration;
@@ -9,6 +10,7 @@ import no.runsafe.framework.output.ConsoleColors;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
+import org.joda.time.DateTime;
 
 import java.util.HashMap;
 
@@ -21,10 +23,14 @@ public class NoteManager implements IConfigurationChanged
 		this.output = output;
 	}
 
-	public void setNoteForPlayer(RunsafePlayer player, String tier, String note)
+	public void setNoteForPlayer(RunsafePlayer setter, RunsafePlayer player, String tier, String note)
 	{
 		PlayerNotes notes = repository.get(player);
-		notes.getNotes().put(tier, note);
+		Note data = new Note();
+		data.setNote(note);
+		data.setSetter(setter);
+		data.setTimestamp(DateTime.now());
+		notes.getNotes().put(tier, data);
 		repository.persist(notes);
 	}
 
@@ -45,13 +51,13 @@ public class NoteManager implements IConfigurationChanged
 
 	public void sendNotices(RunsafePlayer player)
 	{
-		HashMap<String, String> notes = repository.get(player).getNotes();
+		HashMap<String, Note> notes = repository.get(player).getNotes();
 		if (notes != null && notes.size() > 0)
 		{
 			for (String tier : notes.keySet())
 			{
-				String message = formatMessageForGame(tier, player, notes.get(tier));
-				output.write(formatMessageForConsole(tier, player, notes.get(tier)));
+				String message = formatMessageForGame(tier, player, notes.get(tier).getNote());
+				output.write(formatMessageForConsole(tier, player, notes.get(tier).getNote()));
 				String permission = getPermission(tier);
 				for (RunsafePlayer target : server.getOnlinePlayers())
 					if (target.hasPermission(permission))
@@ -63,19 +69,19 @@ public class NoteManager implements IConfigurationChanged
 	public String getNotes(RunsafePlayer player, RunsafePlayer viewer)
 	{
 		StringBuilder result = new StringBuilder();
-		HashMap<String, String> notes = repository.get(player).getNotes();
+		HashMap<String, Note> notes = repository.get(player).getNotes();
 		if (notes != null && notes.size() > 0)
 		{
 			for (String tier : notes.keySet())
 			{
 				if (viewer == null)
 				{
-					result.append(formatMessageForConsole(tier, player, notes.get(tier)));
+					result.append(formatMessageForConsole(tier, player, notes.get(tier).getNote()));
 					result.append("\n");
 				}
 				else if (viewer.hasPermission(getPermission(tier)))
 				{
-					result.append(formatMessageForGame(tier, player, notes.get(tier)));
+					result.append(formatMessageForGame(tier, player, notes.get(tier).getNote()));
 					result.append("\n");
 				}
 			}

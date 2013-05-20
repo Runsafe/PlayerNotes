@@ -16,16 +16,16 @@ public class PlayerNotes
 		this.player = player;
 	}
 
-	public HashMap<String, String> getNotes()
+	public HashMap<String, Note> getNotes()
 	{
 		return notes;
 	}
 
-	public void setNotes(HashMap<String, String> notes)
+	public void setNotes(HashMap<String, Note> notes)
 	{
 		this.notes = notes;
 	}
 
 	private RunsafePlayer player;
-	private HashMap<String, String> notes;
+	private HashMap<String, Note> notes;
 }

@@ -3,6 +3,7 @@ package no.runsafe.PlayerNotes.database;
 import no.runsafe.framework.database.IDatabase;
 import no.runsafe.framework.database.Repository;
 import no.runsafe.framework.output.IOutput;
+import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
 
 import java.sql.PreparedStatement;
@@ -29,11 +30,15 @@ public class NoteRepository extends Repository
 			select.setString(1, player.getName());
 			PlayerNotes notes = new PlayerNotes();
 			notes.setPlayer(player);
-			HashMap<String, String> noteMap = new HashMap<String, String>();
+			HashMap<String, Note> noteMap = new HashMap<String, Note>();
 			ResultSet data = select.executeQuery();
 			while (data.next())
 			{
-				noteMap.put(data.getString("tier"), data.getString("note"));
+				Note note = new Note();
+				note.setSetter(RunsafeServer.Instance.getPlayerExact(data.getString("set_by")));
+				note.setTimestamp(convert(data.getTimestamp("set_at")));
+				note.setNote(data.getString("note"));
+				noteMap.put(data.getString("tier"), note);
 			}
 			notes.setNotes(noteMap);
 			return notes;
@@ -50,9 +55,9 @@ public class NoteRepository extends Repository
 		PlayerNotes notes = get(playerNotes.getPlayer());
 		try
 		{
-			PreparedStatement update = database.prepare("UPDATE playerNotes SET note=? WHERE playerName=? AND tier=?");
-			update.setString(2, playerNotes.getPlayer().getName());
-			PreparedStatement insert = database.prepare("INSERT INTO playerNotes (playerName, tier, note) VALUES (?, ?, ?)");
+			PreparedStatement update = database.prepare("UPDATE playerNotes SET note=?, set_at=NOW(), set_by=? WHERE playerName=? AND tier=?");
+			update.setString(3, playerNotes.getPlayer().getName());
+			PreparedStatement insert = database.prepare("INSERT INTO playerNotes (playerName, tier, note, set_by, set_at) VALUES (?, ?, ?, ?, NOW())");
 			insert.setString(1, playerNotes.getPlayer().getName());
 			PreparedStatement delete = database.prepare("DELETE FROM playerNotes WHERE playerName=? AND tier=?");
 			delete.setString(1, playerNotes.getPlayer().getName());
@@ -62,15 +67,23 @@ public class NoteRepository extends Repository
 				{
 					if (!playerNotes.getNotes().get(tier).equals(notes.getNotes().get(tier)))
 					{
-						update.setString(3, tier);
-						update.setString(1, playerNotes.getNotes().get(tier));
+						update.setString(4, tier);
+						String setter = null;
+						if (playerNotes.getNotes().get(tier).getSetter() != null)
+							setter = playerNotes.getNotes().get(tier).getSetter().getName();
+						update.setString(2, setter);
+						update.setString(1, playerNotes.getNotes().get(tier).getNote());
 						update.executeUpdate();
 					}
 				}
 				else
 				{
+					String setter = null;
+					if (playerNotes.getNotes().get(tier).getSetter() != null)
+						setter = playerNotes.getNotes().get(tier).getSetter().getName();
 					insert.setString(2, tier);
-					insert.setString(3, playerNotes.getNotes().get(tier));
+					insert.setString(3, playerNotes.getNotes().get(tier).getNote());
+					insert.setString(4, setter);
 					insert.executeUpdate();
 				}
 
@@ -121,6 +134,10 @@ public class NoteRepository extends Repository
 				")"
 		);
 		queries.put(1, sql);
+		sql = new ArrayList<String>();
+		sql.add("ALTER TABLE `playerNotes` ADD COLUMN `set_by` VARCHAR(50) NULL");
+		sql.add("ALTER TABLE `playerNotes` ADD COLUMN `set_at` DATETIME NULL");
+		queries.put(2, sql);
 		return queries;
 	}
 
