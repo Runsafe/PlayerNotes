@@ -50,49 +50,61 @@ public class NoteRepository extends Repository
 		return null;
 	}
 
-	public void persist(PlayerNotes playerNotes)
+	public Note get(RunsafePlayer player, String tier)
 	{
-		PlayerNotes notes = get(playerNotes.getPlayer());
 		try
 		{
-			PreparedStatement update = database.prepare("UPDATE playerNotes SET note=?, set_at=NOW(), set_by=? WHERE playerName=? AND tier=?");
-			update.setString(3, playerNotes.getPlayer().getName());
-			PreparedStatement insert = database.prepare("INSERT INTO playerNotes (playerName, tier, note, set_by, set_at) VALUES (?, ?, ?, ?, NOW())");
-			insert.setString(1, playerNotes.getPlayer().getName());
-			PreparedStatement delete = database.prepare("DELETE FROM playerNotes WHERE playerName=? AND tier=?");
-			delete.setString(1, playerNotes.getPlayer().getName());
+			PreparedStatement select = database.prepare("SELECT * FROM playerNotes WHERE playerName=? AND tier=?");
+			select.setString(1, player.getName());
+			select.setString(2, tier);
+			ResultSet data = select.executeQuery();
+			if (data.first())
+			{
+				Note note = new Note();
+				note.setSetter(RunsafeServer.Instance.getPlayerExact(data.getString("set_by")));
+				note.setTimestamp(convert(data.getTimestamp("set_at")));
+				note.setNote(data.getString("note"));
+				return note;
+			}
+		}
+		catch (SQLException e)
+		{
+			output.outputToConsole(e.getMessage(), Level.SEVERE);
+		}
+		return null;
 
-			for (String tier : playerNotes.getNotes().keySet())
-				if (notes.getNotes().containsKey(tier))
-				{
-					if (!playerNotes.getNotes().get(tier).equals(notes.getNotes().get(tier)))
-					{
-						update.setString(4, tier);
-						String setter = null;
-						if (playerNotes.getNotes().get(tier).getSetter() != null)
-							setter = playerNotes.getNotes().get(tier).getSetter().getName();
-						update.setString(2, setter);
-						update.setString(1, playerNotes.getNotes().get(tier).getNote());
-						update.executeUpdate();
-					}
-				}
-				else
-				{
-					String setter = null;
-					if (playerNotes.getNotes().get(tier).getSetter() != null)
-						setter = playerNotes.getNotes().get(tier).getSetter().getName();
-					insert.setString(2, tier);
-					insert.setString(3, playerNotes.getNotes().get(tier).getNote());
-					insert.setString(4, setter);
-					insert.executeUpdate();
-				}
+	}
 
-			for (String tier : notes.getNotes().keySet())
-				if (!playerNotes.getNotes().containsKey(tier))
-				{
-					delete.setString(2, tier);
-					delete.executeUpdate();
-				}
+	public void persist(RunsafePlayer player, String tier, String note, String setter)
+	{
+		Note current = get(player, tier);
+		try
+		{
+			if (current == null)
+			{
+				PreparedStatement insert = database.prepare("INSERT INTO playerNotes (playerName, tier, note, set_by, set_at) VALUES (?, ?, ?, ?, NOW())");
+				insert.setString(1, player.getName());
+				insert.setString(2, tier);
+				insert.setString(3, note);
+				insert.setString(4, setter);
+				insert.executeUpdate();
+			}
+			else if (note == null || note.isEmpty())
+			{
+				PreparedStatement delete = database.prepare("DELETE FROM playerNotes WHERE playerName=? AND tier=?");
+				delete.setString(1, player.getName());
+				delete.setString(2, tier);
+				delete.executeUpdate();
+			}
+			else
+			{
+				PreparedStatement update = database.prepare("UPDATE playerNotes SET note=?, set_at=NOW(), set_by=? WHERE playerName=? AND tier=?");
+				update.setString(1, note);
+				update.setString(2, setter);
+				update.setString(3, player.getName());
+				update.setString(4, tier);
+				update.executeUpdate();
+			}
 		}
 		catch (SQLException e)
 		{
@@ -100,12 +112,12 @@ public class NoteRepository extends Repository
 		}
 	}
 
-	public void delete(PlayerNotes playerNotes)
+	public void clear(RunsafePlayer player)
 	{
 		try
 		{
 			PreparedStatement delete = database.prepare("DELETE FROM playerNotes WHERE playerName=?");
-			delete.setString(1, playerNotes.getPlayer().getName());
+			delete.setString(1, player.getName());
 			delete.executeUpdate();
 		}
 		catch (SQLException e)
