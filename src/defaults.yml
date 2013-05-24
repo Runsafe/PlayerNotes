@@ -1,6 +1,6 @@
 broadcast.format.game: "&9[PN:%1$s] &d%2$s&e logged in: %3$s"
 broadcast.format.console: "&9[PN:%1$s] &d%2$s&e logged in: %3$s"
-broadcast.format.note.advanced: "[%3$s %2$s] %1$s"
+broadcast.format.advancedNote: "[%3$s %2$s] %1$s"
 broadcast.format.note: "%1$s"
 broadcast.format.date: "dd.MM.y"
 

@@ -86,7 +86,7 @@ public class NoteManager implements IConfigurationChanged
 		gameFormat = configuration.getConfigValueAsString("broadcast.format.game");
 		consoleFormat = configuration.getConfigValueAsString("broadcast.format.console");
 		noteFormat = configuration.getConfigValueAsString("broadcast.format.note");
-		advancedNoteFormat = configuration.getConfigValueAsString("broadcast.format.note.advanced");
+		advancedNoteFormat = configuration.getConfigValueAsString("broadcast.format.advancedNote");
 		dateFormat = configuration.getConfigValueAsString("broadcast.format.date");
 		advancedTiers = configuration.getConfigValueAsList("broadcast.advancedTiers");
 	}
