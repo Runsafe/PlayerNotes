@@ -2,7 +2,6 @@ package no.runsafe.PlayerNotes;
 
 import no.runsafe.PlayerNotes.database.Note;
 import no.runsafe.PlayerNotes.database.NoteRepository;
-import no.runsafe.PlayerNotes.database.PlayerNotes;
 import no.runsafe.framework.configuration.IConfiguration;
 import no.runsafe.framework.event.IConfigurationChanged;
 import no.runsafe.framework.output.ChatColour;
@@ -12,7 +11,7 @@ import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import org.joda.time.DateTime;
 
-import java.util.HashMap;
+import java.util.List;
 
 public class NoteManager implements IConfigurationChanged
 {
@@ -41,13 +40,14 @@ public class NoteManager implements IConfigurationChanged
 
 	public void sendNotices(RunsafePlayer player)
 	{
-		HashMap<String, Note> notes = repository.get(player).getNotes();
+		List<Note> notes = repository.get(player).getNotes();
 		if (notes != null && notes.size() > 0)
 		{
-			for (String tier : notes.keySet())
+			for (Note note : notes)
 			{
-				String message = formatMessageForGame(tier, player, notes.get(tier));
-				output.write(formatMessageForConsole(tier, player, notes.get(tier)));
+				String tier = note.getTier();
+				String message = formatMessageForGame(tier, player, note);
+				output.write(formatMessageForConsole(tier, player, note));
 				String permission = getPermission(tier);
 				for (RunsafePlayer target : server.getOnlinePlayers())
 					if (target.hasPermission(permission))
@@ -59,19 +59,20 @@ public class NoteManager implements IConfigurationChanged
 	public String getNotes(RunsafePlayer player, RunsafePlayer viewer)
 	{
 		StringBuilder result = new StringBuilder();
-		HashMap<String, Note> notes = repository.get(player).getNotes();
+		List<Note> notes = repository.get(player).getNotes();
 		if (notes != null && notes.size() > 0)
 		{
-			for (String tier : notes.keySet())
+			for (Note note : notes)
 			{
+				String tier = note.getTier();
 				if (viewer == null)
 				{
-					result.append(formatMessageForConsole(tier, player, notes.get(tier)));
+					result.append(formatMessageForConsole(tier, player, note));
 					result.append("\n");
 				}
 				else if (viewer.hasPermission(getPermission(tier)))
 				{
-					result.append(formatMessageForGame(tier, player, notes.get(tier)));
+					result.append(formatMessageForGame(tier, player, note));
 					result.append("\n");
 				}
 			}
@@ -85,7 +86,9 @@ public class NoteManager implements IConfigurationChanged
 		gameFormat = configuration.getConfigValueAsString("broadcast.format.game");
 		consoleFormat = configuration.getConfigValueAsString("broadcast.format.console");
 		noteFormat = configuration.getConfigValueAsString("broadcast.format.note");
+		advancedNoteFormat = configuration.getConfigValueAsString("broadcast.format.note.advanced");
 		dateFormat = configuration.getConfigValueAsString("broadcast.format.date");
+		advancedTiers = configuration.getConfigValueAsList("broadcast.advancedTiers");
 	}
 
 	private String getPermission(String tier)
@@ -117,12 +120,11 @@ public class NoteManager implements IConfigurationChanged
 	{
 		if (note == null)
 			return "-";
-		return String.format(
-			noteFormat,
-			note.getNote(),
-			convert(note.getSetter()),
-			convert(note.getTimestamp())
-		);
+
+		return (this.advancedTiers.contains(note.getTier()) ?
+				String.format(advancedNoteFormat, note.getNote(), convert(note.getSetter()), convert(note.getTimestamp())) :
+				String.format(noteFormat, note.getNote()));
+
 	}
 
 	private String convert(RunsafePlayer player)
@@ -145,5 +147,7 @@ public class NoteManager implements IConfigurationChanged
 	private String gameFormat;
 	private String consoleFormat;
 	private String noteFormat;
+	private String advancedNoteFormat;
 	private String dateFormat;
+	private List<String> advancedTiers;
 }

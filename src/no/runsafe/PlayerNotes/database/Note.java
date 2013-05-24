@@ -35,7 +35,18 @@ public class Note
 		this.timestamp = timestamp;
 	}
 
+	public String getTier()
+	{
+		return tier;
+	}
+
+	public void setTier(String tier)
+	{
+		this.tier = tier;
+	}
+
 	private String note;
 	private RunsafePlayer setter;
 	private DateTime timestamp;
+	private String tier;
 }

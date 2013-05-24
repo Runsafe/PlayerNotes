@@ -2,7 +2,7 @@ package no.runsafe.PlayerNotes.database;
 
 import no.runsafe.framework.server.player.RunsafePlayer;
 
-import java.util.HashMap;
+import java.util.List;
 
 public class PlayerNotes
 {
@@ -16,16 +16,16 @@ public class PlayerNotes
 		this.player = player;
 	}
 
-	public HashMap<String, Note> getNotes()
+	public List<Note> getNotes()
 	{
 		return notes;
 	}
 
-	public void setNotes(HashMap<String, Note> notes)
+	public void setNotes(List<Note> notes)
 	{
 		this.notes = notes;
 	}
 
 	private RunsafePlayer player;
-	private HashMap<String, Note> notes;
+	private List<Note> notes;
 }

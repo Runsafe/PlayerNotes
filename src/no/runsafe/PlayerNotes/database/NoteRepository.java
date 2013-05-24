@@ -30,7 +30,7 @@ public class NoteRepository extends Repository
 			select.setString(1, player.getName());
 			PlayerNotes notes = new PlayerNotes();
 			notes.setPlayer(player);
-			HashMap<String, Note> noteMap = new HashMap<String, Note>();
+			List<Note> noteMap = new ArrayList<Note>();
 			ResultSet data = select.executeQuery();
 			while (data.next())
 			{
@@ -38,7 +38,8 @@ public class NoteRepository extends Repository
 				note.setSetter(RunsafeServer.Instance.getPlayerExact(data.getString("set_by")));
 				note.setTimestamp(convert(data.getTimestamp("set_at")));
 				note.setNote(data.getString("note"));
-				noteMap.put(data.getString("tier"), note);
+				note.setTier(data.getString("tier"));
+				noteMap.add(note);
 			}
 			notes.setNotes(noteMap);
 			return notes;
