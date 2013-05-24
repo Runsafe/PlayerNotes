@@ -41,7 +41,7 @@ public class NoteManager implements IConfigurationChanged
 
 	public void sendNotices(RunsafePlayer player)
 	{
-		List<Note> notes = repository.get(player).getNotes();
+		List<Note> notes = repository.get(player);
 		if (notes != null && notes.size() > 0)
 		{
 			for (Note note : notes)
@@ -60,7 +60,7 @@ public class NoteManager implements IConfigurationChanged
 	public String getNotes(RunsafePlayer player, RunsafePlayer viewer)
 	{
 		StringBuilder result = new StringBuilder();
-		List<Note> notes = repository.get(player).getNotes();
+		List<Note> notes = repository.get(player);
 		if (notes != null && notes.size() > 0)
 		{
 			for (Note note : notes)

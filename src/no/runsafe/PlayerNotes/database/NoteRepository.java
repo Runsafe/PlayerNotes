@@ -22,14 +22,12 @@ public class NoteRepository extends Repository
 		this.output = output;
 	}
 
-	public PlayerNotes get(RunsafePlayer player)
+	public List<Note> get(RunsafePlayer player)
 	{
 		try
 		{
 			PreparedStatement select = database.prepare("SELECT * FROM playerNotes WHERE playerName=?");
 			select.setString(1, player.getName());
-			PlayerNotes notes = new PlayerNotes();
-			notes.setPlayer(player);
 			List<Note> noteMap = new ArrayList<Note>();
 			ResultSet data = select.executeQuery();
 			while (data.next())
@@ -41,8 +39,7 @@ public class NoteRepository extends Repository
 				note.setTier(data.getString("tier"));
 				noteMap.add(note);
 			}
-			notes.setNotes(noteMap);
-			return notes;
+			return noteMap;
 		}
 		catch (SQLException e)
 		{
