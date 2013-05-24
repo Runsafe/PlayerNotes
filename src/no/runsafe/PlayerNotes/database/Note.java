@@ -45,6 +45,16 @@ public class Note
 		this.tier = tier;
 	}
 
+	public String getPermission()
+	{
+		return String.format("runsafe.note.show.%s", tier);
+	}
+
+	public boolean hasPermission(RunsafePlayer viewer)
+	{
+		return viewer.hasPermission(getPermission());
+	}
+
 	private String note;
 	private RunsafePlayer setter;
 	private DateTime timestamp;

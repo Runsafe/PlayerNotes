@@ -12,6 +12,7 @@ import no.runsafe.framework.server.player.RunsafePlayer;
 import org.joda.time.DateTime;
 
 import java.util.List;
+import java.util.Map;
 
 public class NoteManager implements IConfigurationChanged
 {
@@ -48,7 +49,7 @@ public class NoteManager implements IConfigurationChanged
 				String tier = note.getTier();
 				String message = formatMessageForGame(tier, player, note);
 				output.write(formatMessageForConsole(tier, player, note));
-				String permission = getPermission(tier);
+				String permission = note.getPermission();
 				for (RunsafePlayer target : server.getOnlinePlayers())
 					if (target.hasPermission(permission))
 						target.sendMessage(message);
@@ -70,7 +71,7 @@ public class NoteManager implements IConfigurationChanged
 					result.append(formatMessageForConsole(tier, player, note));
 					result.append("\n");
 				}
-				else if (viewer.hasPermission(getPermission(tier)))
+				else if (note.hasPermission(viewer))
 				{
 					result.append(formatMessageForGame(tier, player, note));
 					result.append("\n");
@@ -83,17 +84,11 @@ public class NoteManager implements IConfigurationChanged
 	@Override
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
-		gameFormat = configuration.getConfigValueAsString("broadcast.format.game");
-		consoleFormat = configuration.getConfigValueAsString("broadcast.format.console");
-		noteFormat = configuration.getConfigValueAsString("broadcast.format.note");
-		advancedNoteFormat = configuration.getConfigValueAsString("broadcast.format.advancedNote");
-		dateFormat = configuration.getConfigValueAsString("broadcast.format.date");
-		advancedTiers = configuration.getConfigValueAsList("broadcast.advancedTiers");
-	}
-
-	private String getPermission(String tier)
-	{
-		return String.format("runsafe.note.show.%s", tier);
+		gameFormat = configuration.getConfigValueAsString("format.broadcast.game");
+		consoleFormat = configuration.getConfigValueAsString("format.broadcast.console");
+		noteFormat = configuration.getConfigValueAsString("format.note");
+		dateFormat = configuration.getConfigValueAsString("format.date");
+		tierFormat = configuration.getConfigValuesAsMap("format.tier");
 	}
 
 	private String formatMessageForGame(String tier, RunsafePlayer player, Note message)
@@ -120,11 +115,10 @@ public class NoteManager implements IConfigurationChanged
 	{
 		if (note == null)
 			return "-";
-
-		return (this.advancedTiers.contains(note.getTier()) ?
-				String.format(advancedNoteFormat, note.getNote(), convert(note.getSetter()), convert(note.getTimestamp())) :
-				String.format(noteFormat, note.getNote()));
-
+		return String.format(
+			tierFormat.containsKey(note.getTier()) ? tierFormat.get(note.getTier()) : noteFormat,
+			note.getNote(), convert(note.getSetter()), convert(note.getTimestamp())
+		);
 	}
 
 	private String convert(RunsafePlayer player)
@@ -147,7 +141,6 @@ public class NoteManager implements IConfigurationChanged
 	private String gameFormat;
 	private String consoleFormat;
 	private String noteFormat;
-	private String advancedNoteFormat;
 	private String dateFormat;
-	private List<String> advancedTiers;
+	private Map<String, String> tierFormat;
 }
