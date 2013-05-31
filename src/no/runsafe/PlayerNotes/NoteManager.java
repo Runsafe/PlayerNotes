@@ -84,11 +84,14 @@ public class NoteManager implements IConfigurationChanged
 	@Override
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
-		gameFormat = configuration.getConfigValueAsString("format.broadcast.game");
-		consoleFormat = configuration.getConfigValueAsString("format.broadcast.console");
-		noteFormat = configuration.getConfigValueAsString("format.note");
-		dateFormat = configuration.getConfigValueAsString("format.date");
+		gameFormat = configuration.getConfigValueAsString("format.broadcast.game").replace("\\n", "\n");
+		consoleFormat = configuration.getConfigValueAsString("format.broadcast.console").replace("\\n", "\n");
+		noteFormat = configuration.getConfigValueAsString("format.note").replace("\\n", "\n");
+		dateFormat = configuration.getConfigValueAsString("format.date").replace("\\n", "\n");
 		tierFormat = configuration.getConfigValuesAsMap("format.tier");
+		if (tierFormat != null)
+			for (String tier : tierFormat.keySet())
+				tierFormat.put(tier, tierFormat.get(tier).replace("\\n", "\n"));
 	}
 
 	private String formatMessageForGame(String tier, RunsafePlayer player, Note message)
