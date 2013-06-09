@@ -6,13 +6,10 @@ import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.Map;
 
 public class NoteRepository extends Repository
 {
@@ -24,104 +21,50 @@ public class NoteRepository extends Repository
 
 	public List<Note> get(RunsafePlayer player)
 	{
-		try
+		List<Map<String, Object>> data = database.Query("SELECT * FROM playerNotes WHERE playerName=?", player.getName());
+		List<Note> noteMap = new ArrayList<Note>();
+		for (Map<String, Object> row : data)
 		{
-			PreparedStatement select = database.prepare("SELECT * FROM playerNotes WHERE playerName=?");
-			select.setString(1, player.getName());
-			List<Note> noteMap = new ArrayList<Note>();
-			ResultSet data = select.executeQuery();
-			while (data.next())
-			{
-				Note note = new Note();
-				note.setSetter(RunsafeServer.Instance.getPlayerExact(data.getString("set_by")));
-				note.setTimestamp(convert(data.getTimestamp("set_at")));
-				note.setNote(data.getString("note"));
-				note.setTier(data.getString("tier"));
-				noteMap.add(note);
-			}
-			return noteMap;
+			Note note = new Note();
+			note.setSetter(RunsafeServer.Instance.getPlayerExact((String) row.get("set_by")));
+			note.setTimestamp(convert(row.get("set_at")));
+			note.setNote((String) row.get("note"));
+			note.setTier((String) row.get("tier"));
+			noteMap.add(note);
 		}
-		catch (SQLException e)
-		{
-			output.outputToConsole(e.getMessage(), Level.SEVERE);
-		}
-		return null;
+		return noteMap;
 	}
 
 	public Note get(RunsafePlayer player, String tier)
 	{
-		try
-		{
-			PreparedStatement select = database.prepare("SELECT * FROM playerNotes WHERE playerName=? AND tier=?");
-			select.setString(1, player.getName());
-			select.setString(2, tier);
-			ResultSet data = select.executeQuery();
-			if (data.first())
-			{
-				Note note = new Note();
-				note.setSetter(RunsafeServer.Instance.getPlayerExact(data.getString("set_by")));
-				note.setTimestamp(convert(data.getTimestamp("set_at")));
-				note.setNote(data.getString("note"));
-				return note;
-			}
-		}
-		catch (SQLException e)
-		{
-			output.outputToConsole(e.getMessage(), Level.SEVERE);
-		}
-		return null;
-
+		Map<String, Object> data =
+			database.QueryRow("SELECT * FROM playerNotes WHERE playerName=? AND tier=?", player.getName(), tier);
+		if (data == null || data.isEmpty())
+			return null;
+		Note note = new Note();
+		note.setSetter(RunsafeServer.Instance.getPlayerExact((String) data.get("set_by")));
+		note.setTimestamp(convert(data.get("set_at")));
+		note.setNote((String) data.get("note"));
+		return note;
 	}
 
 	public void persist(RunsafePlayer player, String tier, String note, String setter)
 	{
 		Note current = get(player, tier);
-		try
-		{
-			if (current == null)
-			{
-				PreparedStatement insert = database.prepare("INSERT INTO playerNotes (playerName, tier, note, set_by, set_at) VALUES (?, ?, ?, ?, NOW())");
-				insert.setString(1, player.getName());
-				insert.setString(2, tier);
-				insert.setString(3, note);
-				insert.setString(4, setter);
-				insert.executeUpdate();
-			}
-			else if (note == null || note.isEmpty())
-			{
-				PreparedStatement delete = database.prepare("DELETE FROM playerNotes WHERE playerName=? AND tier=?");
-				delete.setString(1, player.getName());
-				delete.setString(2, tier);
-				delete.executeUpdate();
-			}
-			else
-			{
-				PreparedStatement update = database.prepare("UPDATE playerNotes SET note=?, set_at=NOW(), set_by=? WHERE playerName=? AND tier=?");
-				update.setString(1, note);
-				update.setString(2, setter);
-				update.setString(3, player.getName());
-				update.setString(4, tier);
-				update.executeUpdate();
-			}
-		}
-		catch (SQLException e)
-		{
-			output.outputToConsole(e.getMessage(), Level.SEVERE);
-		}
+		if (note == null || note.isEmpty())
+			database.Execute("DELETE FROM playerNotes WHERE playerName=? AND tier=?", player.getName(), tier);
+
+		else if (current == null)
+			database.Update(
+				"INSERT INTO playerNotes (playerName, tier, note, set_by, set_at) VALUES (?, ?, ?, ?, NOW()) " +
+					"ON DUPLICATE KEY UPDATE note=VALUES(note),set_by=VALUES(set_by),set_at=NOW()",
+				player.getName(), tier, note, setter
+			);
 	}
 
 	public void clear(RunsafePlayer player)
 	{
-		try
-		{
-			PreparedStatement delete = database.prepare("DELETE FROM playerNotes WHERE playerName=?");
-			delete.setString(1, player.getName());
-			delete.executeUpdate();
-		}
-		catch (SQLException e)
-		{
-			output.outputToConsole(e.getMessage(), Level.SEVERE);
-		}
+		database.Execute("DELETE FROM playerNotes WHERE playerName=?", player.getName());
 	}
 
 	@Override
