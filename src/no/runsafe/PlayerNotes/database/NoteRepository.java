@@ -2,7 +2,6 @@ package no.runsafe.PlayerNotes.database;
 
 import no.runsafe.framework.database.IDatabase;
 import no.runsafe.framework.database.Repository;
-import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
 
@@ -13,24 +12,27 @@ import java.util.Map;
 
 public class NoteRepository extends Repository
 {
-	public NoteRepository(IDatabase database, IOutput output)
+	public NoteRepository(IDatabase database)
 	{
 		this.database = database;
-		this.output = output;
 	}
 
 	public List<Note> get(RunsafePlayer player)
 	{
 		List<Map<String, Object>> data = database.Query("SELECT * FROM playerNotes WHERE playerName=?", player.getName());
 		List<Note> noteMap = new ArrayList<Note>();
-		for (Map<String, Object> row : data)
+
+		if (data != null)
 		{
-			Note note = new Note();
-			note.setSetter(RunsafeServer.Instance.getPlayerExact((String) row.get("set_by")));
-			note.setTimestamp(convert(row.get("set_at")));
-			note.setNote((String) row.get("note"));
-			note.setTier((String) row.get("tier"));
-			noteMap.add(note);
+			for (Map<String, Object> row : data)
+			{
+				Note note = new Note();
+				note.setSetter(RunsafeServer.Instance.getPlayerExact((String) row.get("set_by")));
+				note.setTimestamp(convert(row.get("set_at")));
+				note.setNote((String) row.get("note"));
+				note.setTier((String) row.get("tier"));
+				noteMap.add(note);
+			}
 		}
 		return noteMap;
 	}
@@ -95,5 +97,4 @@ public class NoteRepository extends Repository
 	}
 
 	private final IDatabase database;
-	private final IOutput output;
 }
