@@ -2,13 +2,14 @@ package no.runsafe.PlayerNotes.database;
 
 import no.runsafe.framework.database.IDatabase;
 import no.runsafe.framework.database.Repository;
+import no.runsafe.framework.database.Row;
+import no.runsafe.framework.database.Set;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafePlayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class NoteRepository extends Repository
 {
@@ -19,18 +20,18 @@ public class NoteRepository extends Repository
 
 	public List<Note> get(RunsafePlayer player)
 	{
-		List<Map<String, Object>> data = database.Query("SELECT * FROM playerNotes WHERE playerName=?", player.getName());
+		Set data = database.Query("SELECT * FROM playerNotes WHERE playerName=?", player.getName());
 		List<Note> noteMap = new ArrayList<Note>();
 
 		if (data != null)
 		{
-			for (Map<String, Object> row : data)
+			for (Row row : data)
 			{
 				Note note = new Note();
-				note.setSetter(RunsafeServer.Instance.getPlayerExact((String) row.get("set_by")));
-				note.setTimestamp(convert(row.get("set_at")));
-				note.setNote((String) row.get("note"));
-				note.setTier((String) row.get("tier"));
+				note.setSetter(RunsafeServer.Instance.getPlayerExact(row.String("set_by")));
+				note.setTimestamp(row.DateTime("set_at"));
+				note.setNote(row.String("note"));
+				note.setTier(row.String("tier"));
 				noteMap.add(note);
 			}
 		}
@@ -39,14 +40,14 @@ public class NoteRepository extends Repository
 
 	public Note get(RunsafePlayer player, String tier)
 	{
-		Map<String, Object> data =
+		Row data =
 			database.QueryRow("SELECT * FROM playerNotes WHERE playerName=? AND tier=?", player.getName(), tier);
-		if (data == null || data.isEmpty())
+		if (data == null)
 			return null;
 		Note note = new Note();
-		note.setSetter(RunsafeServer.Instance.getPlayerExact((String) data.get("set_by")));
-		note.setTimestamp(convert(data.get("set_at")));
-		note.setNote((String) data.get("note"));
+		note.setSetter(RunsafeServer.Instance.getPlayerExact(data.String("set_by")));
+		note.setTimestamp(data.DateTime("set_at"));
+		note.setNote(data.String("note"));
 		return note;
 	}
 
