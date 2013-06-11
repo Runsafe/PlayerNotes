@@ -1,6 +1,6 @@
 package no.runsafe.PlayerNotes.database;
 
-import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import org.joda.time.DateTime;
 
 public class Note

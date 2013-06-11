@@ -2,8 +2,8 @@ package no.runsafe.PlayerNotes.command;
 
 import no.runsafe.PlayerNotes.NoteManager;
 import no.runsafe.PlayerNotes.RandomGenerator;
-import no.runsafe.framework.command.Command;
-import no.runsafe.framework.timer.IScheduler;
+import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.Command;
 
 public class NoteCommand extends Command
 {

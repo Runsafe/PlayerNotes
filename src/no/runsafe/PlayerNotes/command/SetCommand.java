@@ -2,11 +2,11 @@ package no.runsafe.PlayerNotes.command;
 
 import no.runsafe.PlayerNotes.NoteManager;
 import no.runsafe.PlayerNotes.RandomGenerator;
-import no.runsafe.framework.command.AsyncCommand;
-import no.runsafe.framework.server.ICommandExecutor;
-import no.runsafe.framework.server.RunsafeServer;
-import no.runsafe.framework.server.player.RunsafePlayer;
-import no.runsafe.framework.timer.IScheduler;
+import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.ICommandExecutor;
+import no.runsafe.framework.internal.command.AsyncCommand;
+import no.runsafe.framework.minecraft.RunsafeServer;
+import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 import java.util.HashMap;
 

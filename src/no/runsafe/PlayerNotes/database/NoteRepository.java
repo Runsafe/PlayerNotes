@@ -1,11 +1,11 @@
 package no.runsafe.PlayerNotes.database;
 
-import no.runsafe.framework.database.IDatabase;
-import no.runsafe.framework.database.Repository;
-import no.runsafe.framework.database.Row;
-import no.runsafe.framework.database.Set;
-import no.runsafe.framework.server.RunsafeServer;
-import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.framework.api.database.IDatabase;
+import no.runsafe.framework.internal.database.Repository;
+import no.runsafe.framework.internal.database.Row;
+import no.runsafe.framework.internal.database.Set;
+import no.runsafe.framework.minecraft.RunsafeServer;
+import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;

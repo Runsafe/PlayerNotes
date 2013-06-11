@@ -1,11 +1,9 @@
 package no.runsafe.PlayerNotes.event;
 
 import no.runsafe.PlayerNotes.NoteManager;
-import no.runsafe.framework.event.IAsyncEvent;
-import no.runsafe.framework.event.player.IPlayerJoinEvent;
-import no.runsafe.framework.event.player.IPlayerLoginEvent;
-import no.runsafe.framework.server.event.player.RunsafePlayerJoinEvent;
-import no.runsafe.framework.server.event.player.RunsafePlayerLoginEvent;
+import no.runsafe.framework.api.event.IAsyncEvent;
+import no.runsafe.framework.api.event.player.IPlayerJoinEvent;
+import no.runsafe.framework.minecraft.event.player.RunsafePlayerJoinEvent;
 
 public class PlayerJoin implements IPlayerJoinEvent, IAsyncEvent
 {
@@ -15,7 +13,8 @@ public class PlayerJoin implements IPlayerJoinEvent, IAsyncEvent
 	}
 
 	@Override
-	public void OnPlayerJoinEvent(RunsafePlayerJoinEvent event) {
+	public void OnPlayerJoinEvent(RunsafePlayerJoinEvent event)
+	{
 		manager.sendNotices(event.getPlayer());
 	}
 
