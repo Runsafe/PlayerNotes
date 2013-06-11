@@ -1,9 +1,9 @@
 package no.runsafe.PlayerNotes.database;
 
 import no.runsafe.framework.api.database.IDatabase;
-import no.runsafe.framework.internal.database.Repository;
-import no.runsafe.framework.internal.database.Row;
-import no.runsafe.framework.internal.database.Set;
+import no.runsafe.framework.api.database.IRow;
+import no.runsafe.framework.api.database.ISet;
+import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
@@ -20,12 +20,12 @@ public class NoteRepository extends Repository
 
 	public List<Note> get(RunsafePlayer player)
 	{
-		Set data = database.Query("SELECT * FROM playerNotes WHERE playerName=?", player.getName());
+		ISet data = database.Query("SELECT * FROM playerNotes WHERE playerName=?", player.getName());
 		List<Note> noteMap = new ArrayList<Note>();
 
 		if (data != null)
 		{
-			for (Row row : data)
+			for (IRow row : data)
 			{
 				Note note = new Note();
 				note.setSetter(RunsafeServer.Instance.getPlayerExact(row.String("set_by")));
@@ -40,7 +40,7 @@ public class NoteRepository extends Repository
 
 	public Note get(RunsafePlayer player, String tier)
 	{
-		Row data =
+		IRow data =
 			database.QueryRow("SELECT * FROM playerNotes WHERE playerName=? AND tier=?", player.getName(), tier);
 		if (data == null)
 			return null;

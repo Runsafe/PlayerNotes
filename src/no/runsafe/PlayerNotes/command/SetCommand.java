@@ -3,8 +3,8 @@ package no.runsafe.PlayerNotes.command;
 import no.runsafe.PlayerNotes.NoteManager;
 import no.runsafe.PlayerNotes.RandomGenerator;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
-import no.runsafe.framework.internal.command.AsyncCommand;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
