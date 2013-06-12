@@ -8,7 +8,7 @@ import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.framework.text.ChatColour;
-import no.runsafe.framework.text.ConsoleColors;
+import no.runsafe.framework.text.ConsoleColour;
 import org.joda.time.DateTime;
 
 import java.util.List;
@@ -109,7 +109,7 @@ public class NoteManager implements IConfigurationChanged
 		return ChatColour.ToConsole(String.format(
 			consoleFormat,
 			tier,
-			ConsoleColors.FromMinecraft(player.getPrettyName()),
+			ConsoleColour.FromMinecraft(player.getPrettyName()),
 			convert(message)
 		));
 	}
