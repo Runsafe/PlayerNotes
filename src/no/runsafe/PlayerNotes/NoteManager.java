@@ -4,6 +4,7 @@ import no.runsafe.PlayerNotes.database.Note;
 import no.runsafe.PlayerNotes.database.NoteRepository;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
@@ -16,11 +17,12 @@ import java.util.Map;
 
 public class NoteManager implements IConfigurationChanged
 {
-	public NoteManager(NoteRepository repository, RunsafeServer server, IOutput output)
+	public NoteManager(NoteRepository repository, RunsafeServer server, IOutput output, IScheduler scheduler)
 	{
 		this.repository = repository;
 		this.server = server;
 		this.output = output;
+		this.scheduler = scheduler;
 	}
 
 	public void setNoteForPlayer(RunsafePlayer executor, RunsafePlayer player, String tier, String note)
@@ -39,21 +41,35 @@ public class NoteManager implements IConfigurationChanged
 		repository.clear(player);
 	}
 
-	public void sendNotices(RunsafePlayer player)
+	public void sendNotices(final RunsafePlayer player)
 	{
 		List<Note> notes = repository.get(player);
 		if (notes != null && notes.size() > 0)
 		{
-			for (Note note : notes)
-			{
-				String tier = note.getTier();
-				String message = formatMessageForGame(tier, player, note);
-				output.write(formatMessageForConsole(tier, player, note));
-				String permission = note.getPermission();
-				for (RunsafePlayer target : server.getOnlinePlayers())
-					if (target.hasPermission(permission))
-						target.sendMessage(message);
-			}
+			for (final Note note : notes)
+				scheduler.startSyncTask(new Notifier(note, player), 1);
+		}
+	}
+
+	class Notifier implements Runnable
+	{
+		private final Note note;
+		private final RunsafePlayer player;
+
+		Notifier(Note note, RunsafePlayer player)
+		{
+			this.note = note;
+			this.player = player;
+		}
+
+		@Override
+		public void run()
+		{
+			String message = formatMessageForGame(note.getTier(), player, note);
+			output.write(formatMessageForConsole(note.getTier(), player, note));
+			for (RunsafePlayer target : server.getOnlinePlayers())
+				if (target.hasPermission(note.getPermission()))
+					target.sendMessage(message);
 		}
 	}
 
@@ -141,6 +157,7 @@ public class NoteManager implements IConfigurationChanged
 	private final NoteRepository repository;
 	private final RunsafeServer server;
 	private final IOutput output;
+	private final IScheduler scheduler;
 	private String gameFormat;
 	private String consoleFormat;
 	private String noteFormat;
