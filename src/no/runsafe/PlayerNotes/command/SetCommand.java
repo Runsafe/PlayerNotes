@@ -9,6 +9,7 @@ import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class SetCommand extends AsyncCommand
 {
@@ -18,6 +19,14 @@ public class SetCommand extends AsyncCommand
 		this.manager = manager;
 		this.randomGenerator = randomGenerator;
 		captureTail();
+	}
+
+	@Override
+	public List<String> getParameterOptions(String parameter)
+	{
+		if (parameter.equals("tier"))
+			return manager.getTiers();
+		return null;
 	}
 
 	@Override

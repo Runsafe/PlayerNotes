@@ -1,5 +1,6 @@
 package no.runsafe.PlayerNotes;
 
+import com.google.common.collect.Lists;
 import no.runsafe.PlayerNotes.database.Note;
 import no.runsafe.PlayerNotes.database.NoteRepository;
 import no.runsafe.framework.api.IConfiguration;
@@ -49,6 +50,11 @@ public class NoteManager implements IConfigurationChanged
 			for (final Note note : notes)
 				scheduler.startSyncTask(new Notifier(note, player), 1);
 		}
+	}
+
+	public List<String> getTiers()
+	{
+		return Lists.newArrayList(tierFormat.keySet());
 	}
 
 	class Notifier implements Runnable
