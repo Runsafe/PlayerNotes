@@ -7,6 +7,7 @@ import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
+import no.runsafe.framework.text.ChatColour;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,8 @@ public class SetCommand extends AsyncCommand
 	{
 		RunsafePlayer target = RunsafeServer.Instance.getPlayer(params.get("player"));
 		String note = (params.get("note").equalsIgnoreCase("random") ? randomGenerator.getRandomTag() : params.get("note"));
+		if(!executor.hasPermission("runsafe.note.colour"))
+			note = ChatColour.Strip(note);
 		RunsafePlayer setter = null;
 		if (executor instanceof RunsafePlayer)
 			setter = (RunsafePlayer) executor;
