@@ -54,12 +54,12 @@ public class NoteRepository extends Repository
 	{
 		if (note == null || note.isEmpty())
 			database.Execute("DELETE FROM playerNotes WHERE playerName=? AND tier=?", player.getName(), tier);
-
-		database.Update(
-			"INSERT INTO playerNotes (playerName, tier, note, set_by, set_at) VALUES (?, ?, ?, ?, NOW()) " +
-				"ON DUPLICATE KEY UPDATE note=VALUES(note),set_by=VALUES(set_by),set_at=NOW()",
-			player.getName(), tier, note, setter
-		);
+		else
+			database.Update(
+				"INSERT INTO playerNotes (playerName, tier, note, set_by, set_at) VALUES (?, ?, ?, ?, NOW()) " +
+					"ON DUPLICATE KEY UPDATE note=VALUES(note),set_by=VALUES(set_by),set_at=NOW()",
+				player.getName(), tier, note, setter
+			);
 	}
 
 	public void clear(RunsafePlayer player)
