@@ -28,7 +28,7 @@ public class NoteManager implements IConfigurationChanged
 
 	public void setNoteForPlayer(RunsafePlayer executor, RunsafePlayer player, String tier, String note)
 	{
-		String setter = (executor == null) ? "Server" : executor.getName();
+		String setter = (executor == null ? "Server" : executor.getName());
 		repository.persist(player, tier, note, setter);
 	}
 
