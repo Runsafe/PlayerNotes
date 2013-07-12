@@ -53,16 +53,14 @@ public class NoteRepository extends Repository
 
 	public void persist(RunsafePlayer player, String tier, String note, String setter)
 	{
-		Note current = get(player, tier);
 		if (note == null || note.isEmpty())
 			database.Execute("DELETE FROM playerNotes WHERE playerName=? AND tier=?", player.getName(), tier);
 
-		else if (current == null)
-			database.Update(
-				"INSERT INTO playerNotes (playerName, tier, note, set_by, set_at) VALUES (?, ?, ?, ?, NOW()) " +
-					"ON DUPLICATE KEY UPDATE note=VALUES(note),set_by=VALUES(set_by),set_at=NOW()",
-				player.getName(), tier, note, setter
-			);
+		database.Update(
+			"INSERT INTO playerNotes (playerName, tier, note, set_by, set_at) VALUES (?, ?, ?, ?, NOW()) " +
+				"ON DUPLICATE KEY UPDATE note=VALUES(note),set_by=VALUES(set_by),set_at=NOW()",
+			player.getName(), tier, note, setter
+		);
 	}
 
 	public void clear(RunsafePlayer player)

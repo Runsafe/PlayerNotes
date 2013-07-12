@@ -36,9 +36,11 @@ public class SetCommand extends AsyncCommand
 
 		if(!executor.hasPermission("runsafe.note.colour"))
 			note = ChatColour.Strip(note);
+
 		RunsafePlayer setter = null;
 		if (executor instanceof RunsafePlayer)
 			setter = (RunsafePlayer) executor;
+
 		manager.setNoteForPlayer(setter, target, params.get("tier"), note);
 		return String.format(("%s note set for %s."), params.get("tier"), target.getPrettyName());
 	}
