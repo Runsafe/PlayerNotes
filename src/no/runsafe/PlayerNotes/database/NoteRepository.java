@@ -4,7 +4,6 @@ import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.IRow;
 import no.runsafe.framework.api.database.ISet;
 import no.runsafe.framework.api.database.Repository;
-import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class NoteRepository extends Repository
 			for (IRow row : data)
 			{
 				Note note = new Note();
-				note.setSetter(RunsafeServer.Instance.getPlayerExact(row.String("set_by")));
+				note.setSetter(row.String("set_by"));
 				note.setTimestamp(row.DateTime("set_at"));
 				note.setNote(row.String("note"));
 				note.setTier(row.String("tier"));
@@ -45,7 +44,7 @@ public class NoteRepository extends Repository
 		if (data == null)
 			return null;
 		Note note = new Note();
-		note.setSetter(RunsafeServer.Instance.getPlayerExact(data.String("set_by")));
+		note.setSetter(data.String("set_by"));
 		note.setTimestamp(data.DateTime("set_at"));
 		note.setNote(data.String("note"));
 		return note;

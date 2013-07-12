@@ -15,12 +15,12 @@ public class Note
 		this.note = note;
 	}
 
-	public RunsafePlayer getSetter()
+	public String getSetter()
 	{
 		return setter;
 	}
 
-	public void setSetter(RunsafePlayer setter)
+	public void setSetter(String setter)
 	{
 		this.setter = setter;
 	}
@@ -56,7 +56,7 @@ public class Note
 	}
 
 	private String note;
-	private RunsafePlayer setter;
+	private String setter;
 	private DateTime timestamp;
 	private String tier;
 }

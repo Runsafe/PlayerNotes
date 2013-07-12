@@ -142,15 +142,8 @@ public class NoteManager implements IConfigurationChanged
 			return "-";
 		return String.format(
 			tierFormat.containsKey(note.getTier()) ? tierFormat.get(note.getTier()) : noteFormat,
-			note.getNote(), convert(note.getSetter()), convert(note.getTimestamp())
+			note.getNote(), note.getSetter(), convert(note.getTimestamp())
 		);
-	}
-
-	private String convert(RunsafePlayer player)
-	{
-		if (player == null)
-			return "-";
-		return player.getName();
 	}
 
 	private String convert(DateTime date)
