@@ -1,7 +1,6 @@
 package no.runsafe.PlayerNotes.command;
 
 import no.runsafe.PlayerNotes.NoteManager;
-import no.runsafe.PlayerNotes.RandomGenerator;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.Command;
 

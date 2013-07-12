@@ -15,6 +15,5 @@ public class Plugin extends RunsafeConfigurablePlugin
 		addComponent(NoteManager.class);
 		addComponent(NoteCommand.class);
 		addComponent(PlayerJoin.class);
-		addComponent(RandomGenerator.class);
 	}
 }
