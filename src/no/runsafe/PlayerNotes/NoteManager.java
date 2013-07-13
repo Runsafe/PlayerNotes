@@ -13,6 +13,7 @@ import no.runsafe.framework.text.ChatColour;
 import no.runsafe.framework.text.ConsoleColour;
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -79,31 +80,28 @@ public class NoteManager implements IConfigurationChanged
 		}
 	}
 
-	public String getNotes(RunsafePlayer player, RunsafePlayer viewer, String tierFilter)
+	public List<String> getNotes(RunsafePlayer player, RunsafePlayer viewer, String tierFilter)
 	{
-		StringBuilder result = new StringBuilder();
-		List<Note> notes = repository.get(player);
+		List<String> result = new ArrayList<String>();
+ 		List<Note> notes = repository.get(player);
 		if (notes != null && notes.size() > 0)
 		{
 			for (Note note : notes)
 			{
 				if (tierFilter == null || note.getTier().startsWith(tierFilter))
 				{
-					String tier = note.getTier();
 					if (viewer == null)
 					{
-						result.append(formatMessageForConsole(tier, player, note));
-						result.append("\n");
+						result.add(convert(note));
 					}
 					else if (note.hasPermission(viewer))
 					{
-						result.append(formatMessageForGame(tier, player, note));
-						result.append("\n");
+						result.add(convert(note));
 					}
 				}
 			}
 		}
-		return result.toString();
+		return result;
 	}
 
 	@Override
