@@ -6,6 +6,7 @@ import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
+import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ public class ListCommand extends AsyncCommand
 
 				notes.add(manager.getNotes(player, viewer, args == null || args.length == 0 ? null : args[0]));
 			}
+			return Strings.join(notes, "\n");
 		}
 		return manager.getNotes(RunsafeServer.Instance.getPlayer(params.get("player")), viewer, null);
 	}
