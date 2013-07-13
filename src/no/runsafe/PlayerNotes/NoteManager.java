@@ -79,7 +79,7 @@ public class NoteManager implements IConfigurationChanged
 		}
 	}
 
-	public String getNotes(RunsafePlayer player, RunsafePlayer viewer)
+	public String getNotes(RunsafePlayer player, RunsafePlayer viewer, String tierFilter)
 	{
 		StringBuilder result = new StringBuilder();
 		List<Note> notes = repository.get(player);
@@ -87,16 +87,19 @@ public class NoteManager implements IConfigurationChanged
 		{
 			for (Note note : notes)
 			{
-				String tier = note.getTier();
-				if (viewer == null)
+				if (tierFilter == null || note.getTier().startsWith(tierFilter))
 				{
-					result.append(formatMessageForConsole(tier, player, note));
-					result.append("\n");
-				}
-				else if (note.hasPermission(viewer))
-				{
-					result.append(formatMessageForGame(tier, player, note));
-					result.append("\n");
+					String tier = note.getTier();
+					if (viewer == null)
+					{
+						result.append(formatMessageForConsole(tier, player, note));
+						result.append("\n");
+					}
+					else if (note.hasPermission(viewer))
+					{
+						result.append(formatMessageForGame(tier, player, note));
+						result.append("\n");
+					}
 				}
 			}
 		}

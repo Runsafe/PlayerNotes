@@ -7,7 +7,9 @@ import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ListCommand extends AsyncCommand
 {
@@ -20,10 +22,26 @@ public class ListCommand extends AsyncCommand
 	@Override
 	public String OnAsyncExecute(ICommandExecutor executor, HashMap<String, String> params)
 	{
+		return null;
+	}
+
+	public String OnAsyncExecute(ICommandExecutor executor, HashMap<String, String> params, String[] args)
+	{
 		RunsafePlayer viewer = null;
 		if (executor instanceof RunsafePlayer)
 			viewer = (RunsafePlayer) executor;
-		return manager.getNotes(RunsafeServer.Instance.getPlayer(params.get("player")), viewer);
+		if (params.get("player").equals("*"))
+		{
+			List<String> notes = new ArrayList<String>();
+			for (RunsafePlayer player : RunsafeServer.Instance.getOnlinePlayers())
+			{
+				if (viewer != null && viewer.shouldNotSee(player))
+					continue;
+
+				notes.add(manager.getNotes(player, viewer, args == null || args.length == 0 ? null : args[0]));
+			}
+		}
+		return manager.getNotes(RunsafeServer.Instance.getPlayer(params.get("player")), viewer, null);
 	}
 
 	private final NoteManager manager;
