@@ -83,24 +83,12 @@ public class NoteManager implements IConfigurationChanged
 	public List<String> getNotes(RunsafePlayer player, RunsafePlayer viewer, String tierFilter)
 	{
 		List<String> result = new ArrayList<String>();
- 		List<Note> notes = repository.get(player);
+		List<Note> notes = repository.get(player);
 		if (notes != null && notes.size() > 0)
-		{
 			for (Note note : notes)
-			{
 				if (tierFilter == null || note.getTier().startsWith(tierFilter))
-				{
-					if (viewer == null)
-					{
+					if (viewer == null || note.hasPermission(viewer))
 						result.add(convert(note));
-					}
-					else if (note.hasPermission(viewer))
-					{
-						result.add(convert(note));
-					}
-				}
-			}
-		}
 		return result;
 	}
 
