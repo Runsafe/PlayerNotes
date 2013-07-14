@@ -1,11 +1,13 @@
 package no.runsafe.PlayerNotes.database;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.IRow;
-import no.runsafe.framework.api.database.ISet;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,29 +21,32 @@ public class NoteRepository extends Repository
 
 	public List<Note> get(RunsafePlayer player)
 	{
-		ISet data = database.Query("SELECT * FROM playerNotes WHERE playerName=?", player.getName());
-		List<Note> noteMap = new ArrayList<Note>();
-
-		if (data != null)
-		{
-			for (IRow row : data)
+		return Lists.transform(
+			database.Query("SELECT * FROM playerNotes WHERE playerName=?", player.getName()),
+			new Function<IRow, Note>()
 			{
-				Note note = new Note();
-				note.setSetter(row.String("set_by"));
-				note.setTimestamp(row.DateTime("set_at"));
-				note.setNote(row.String("note"));
-				note.setTier(row.String("tier"));
-				noteMap.add(note);
+				@Override
+				public Note apply(@Nullable IRow row)
+				{
+					assert row != null;
+					Note note = new Note();
+					note.setSetter(row.String("set_by"));
+					note.setTimestamp(row.DateTime("set_at"));
+					note.setNote(row.String("note"));
+					note.setTier(row.String("tier"));
+					return note;
+				}
 			}
-		}
-		return noteMap;
+		);
 	}
 
 	public Note get(RunsafePlayer player, String tier)
 	{
-		IRow data =
-			database.QueryRow("SELECT * FROM playerNotes WHERE playerName=? AND tier=?", player.getName(), tier);
-		if (data == null)
+		IRow data = database.QueryRow(
+			"SELECT * FROM playerNotes WHERE playerName=? AND tier=?",
+			player.getName(), tier
+		);
+		if (data.isEmpty())
 			return null;
 		Note note = new Note();
 		note.setSetter(data.String("set_by"));
