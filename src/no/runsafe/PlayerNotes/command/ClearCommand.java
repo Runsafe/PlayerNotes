@@ -7,7 +7,7 @@ import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class ClearCommand extends AsyncCommand
 {
@@ -18,7 +18,7 @@ public class ClearCommand extends AsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(ICommandExecutor executor, HashMap<String, String> params)
+	public String OnAsyncExecute(ICommandExecutor executor, Map<String, String> params)
 	{
 		RunsafePlayer target = RunsafeServer.Instance.getPlayer(params.get("player"));
 		if (params.get("tier").equals("*"))

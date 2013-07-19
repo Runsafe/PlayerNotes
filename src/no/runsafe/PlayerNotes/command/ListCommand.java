@@ -9,8 +9,8 @@ import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ListCommand extends AsyncCommand
 {
@@ -21,12 +21,12 @@ public class ListCommand extends AsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(ICommandExecutor executor, HashMap<String, String> params)
+	public String OnAsyncExecute(ICommandExecutor executor, Map<String, String> params)
 	{
 		return null;
 	}
 
-	public String OnAsyncExecute(ICommandExecutor executor, HashMap<String, String> params, String[] args)
+	public String OnAsyncExecute(ICommandExecutor executor, Map<String, String> params, String[] args)
 	{
 		RunsafePlayer viewer = null;
 		if (executor instanceof RunsafePlayer)

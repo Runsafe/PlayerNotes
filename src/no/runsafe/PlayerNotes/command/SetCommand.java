@@ -8,8 +8,8 @@ import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.framework.text.ChatColour;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SetCommand extends AsyncCommand
 {
@@ -29,12 +29,12 @@ public class SetCommand extends AsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(ICommandExecutor executor, HashMap<String, String> params)
+	public String OnAsyncExecute(ICommandExecutor executor, Map<String, String> params)
 	{
 		RunsafePlayer target = RunsafeServer.Instance.getPlayer(params.get("player"));
 		String note = params.get("note");
 
-		if(!executor.hasPermission("runsafe.note.colour"))
+		if (!executor.hasPermission("runsafe.note.colour"))
 			note = ChatColour.Strip(note);
 
 		RunsafePlayer setter = null;
