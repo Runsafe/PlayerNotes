@@ -33,19 +33,21 @@ public class ListCommand extends AsyncCommand
 			viewer = (RunsafePlayer) executor;
 		List<String> notes = new ArrayList<String>();
 		if (params.get("player").equals("*"))
-		{
 			for (RunsafePlayer player : RunsafeServer.Instance.getOnlinePlayers())
-			{
-				if (viewer != null && viewer.shouldNotSee(player))
-					continue;
-				notes.add(String.format("Notes for %s:", player.getPrettyName()));
-				notes.addAll(manager.getNotes(player, viewer, args == null || args.length == 0 ? null : args[0]));
-			}
-		}
+				notes.addAll(getNotes(viewer, player, args == null || args.length == 0 ? null : args[0]));
 		else
-			notes = manager.getNotes(RunsafeServer.Instance.getPlayer(params.get("player")), viewer, null);
-
+			notes = getNotes(viewer, RunsafeServer.Instance.getPlayer(params.get("player")), null);
 		return Strings.join(notes, "\n");
+	}
+
+	private List<String> getNotes(RunsafePlayer viewer, RunsafePlayer player, String tier)
+	{
+		List<String> notes = new ArrayList<String>();
+		if (viewer != null && viewer.shouldNotSee(player))
+			return notes;
+		notes.add(String.format("Notes for %s:", player.getPrettyName()));
+		notes.addAll(manager.getNotes(player, viewer, tier));
+		return notes;
 	}
 
 	private final NoteManager manager;
