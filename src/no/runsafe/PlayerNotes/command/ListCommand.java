@@ -17,7 +17,10 @@ public class ListCommand extends AsyncCommand
 {
 	public ListCommand(NoteManager manager, IScheduler scheduler)
 	{
-		super("list", "Lists all notes you can see for the given player", null, scheduler, new OptionalArgument("filter"));
+		super(
+			"list", "Lists all notes you can see for the given player", null, scheduler,
+			new OptionalArgument("filter")
+		);
 		this.manager = manager;
 	}
 

@@ -4,6 +4,7 @@ import no.runsafe.PlayerNotes.NoteManager;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
+import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
@@ -13,7 +14,10 @@ public class ClearCommand extends AsyncCommand
 {
 	public ClearCommand(NoteManager manager, IScheduler scheduler)
 	{
-		super("clear", "Removes a note from a player, or all if * is used.", "runsafe.note.clear.<tier>", scheduler, "tier");
+		super(
+			"clear", "Removes a note from a player, or all if * is used.", "runsafe.note.clear.<tier>", scheduler,
+			new RequiredArgument("tier")
+		);
 		this.manager = manager;
 	}
 
