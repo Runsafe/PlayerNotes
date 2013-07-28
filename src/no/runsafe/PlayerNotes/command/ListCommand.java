@@ -4,6 +4,7 @@ import no.runsafe.PlayerNotes.NoteManager;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
+import no.runsafe.framework.api.command.argument.OptionalArgument;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
@@ -16,17 +17,12 @@ public class ListCommand extends AsyncCommand
 {
 	public ListCommand(NoteManager manager, IScheduler scheduler)
 	{
-		super("list", "Lists all notes you can see for the given player", null, scheduler);
+		super("list", "Lists all notes you can see for the given player", null, scheduler, new OptionalArgument("filter"));
 		this.manager = manager;
 	}
 
 	@Override
 	public String OnAsyncExecute(ICommandExecutor executor, Map<String, String> params)
-	{
-		return null;
-	}
-
-	public String OnAsyncExecute(ICommandExecutor executor, Map<String, String> params, String[] args)
 	{
 		RunsafePlayer viewer = null;
 		if (executor instanceof RunsafePlayer)
@@ -34,7 +30,7 @@ public class ListCommand extends AsyncCommand
 		List<String> notes = new ArrayList<String>();
 		if (params.get("player").equals("*"))
 			for (RunsafePlayer player : RunsafeServer.Instance.getOnlinePlayers())
-				notes.addAll(getNotes(viewer, player, args == null || args.length == 0 ? null : args[0]));
+				notes.addAll(getNotes(viewer, player, params.containsKey("filter") ? params.get("filter") : null));
 		else
 			notes = getNotes(viewer, RunsafeServer.Instance.getPlayer(params.get("player")), null);
 		return Strings.join(notes, "\n");

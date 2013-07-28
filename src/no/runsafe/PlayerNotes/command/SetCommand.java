@@ -4,6 +4,7 @@ import no.runsafe.PlayerNotes.NoteManager;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
+import no.runsafe.framework.api.command.argument.TrailingArgument;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.framework.text.ChatColour;
@@ -15,9 +16,8 @@ public class SetCommand extends AsyncCommand
 {
 	public SetCommand(NoteManager manager, IScheduler scheduler)
 	{
-		super("set", "Sets a note for the given player", "runsafe.note.set.<tier>", scheduler, "tier", "note");
+		super("set", "Sets a note for the given player", "runsafe.note.set.<tier>", scheduler, "tier", new TrailingArgument("note"));
 		this.manager = manager;
-		captureTail();
 	}
 
 	@Override
