@@ -35,7 +35,7 @@ public class ListCommand extends AsyncCommand
 			for (RunsafePlayer player : RunsafeServer.Instance.getOnlinePlayers())
 				notes.addAll(getNotes(viewer, player, params.containsKey("filter") ? params.get("filter") : null));
 		else
-			notes = getNotes(viewer, RunsafeServer.Instance.getPlayer(params.get("player")), null);
+			notes = getNotes(null, RunsafeServer.Instance.getPlayer(params.get("player")), null);
 		return Strings.join(notes, "\n");
 	}
 
