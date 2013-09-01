@@ -42,7 +42,7 @@ public class ListCommand extends AsyncCommand
 	private List<String> getNotes(RunsafePlayer viewer, RunsafePlayer player, String tier)
 	{
 		List<String> notes = new ArrayList<String>();
-		if (viewer != null && viewer.shouldNotSee(player))
+		if (player == null || (viewer != null && viewer.shouldNotSee(player)))
 			return notes;
 		notes.add(String.format("Notes for %s:", player.getPrettyName()));
 		notes.addAll(manager.getNotes(player, viewer, tier));
