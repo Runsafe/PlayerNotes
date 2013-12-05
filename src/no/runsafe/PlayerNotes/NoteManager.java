@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import no.runsafe.PlayerNotes.database.Note;
 import no.runsafe.PlayerNotes.database.NoteRepository;
 import no.runsafe.framework.api.IConfiguration;
-import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.IConsole;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.minecraft.RunsafeServer;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class NoteManager implements IConfigurationChanged
 {
-	public NoteManager(NoteRepository repository, RunsafeServer server, IOutput output, IScheduler scheduler)
+	public NoteManager(NoteRepository repository, RunsafeServer server, IConsole output, IScheduler scheduler)
 	{
 		this.repository = repository;
 		this.server = server;
@@ -73,7 +73,7 @@ public class NoteManager implements IConfigurationChanged
 		public void run()
 		{
 			String message = formatMessageForGame(note.getTier(), player, note);
-			output.write(formatMessageForConsole(note.getTier(), player, note));
+			output.logInformation(formatMessageForConsole(note.getTier(), player, note));
 			for (RunsafePlayer target : server.getOnlinePlayers())
 				if (target.hasPermission(note.getPermission()))
 					target.sendMessage(message);
@@ -144,7 +144,7 @@ public class NoteManager implements IConfigurationChanged
 
 	private final NoteRepository repository;
 	private final RunsafeServer server;
-	private final IOutput output;
+	private final IConsole output;
 	private final IScheduler scheduler;
 	private String gameFormat;
 	private String consoleFormat;
