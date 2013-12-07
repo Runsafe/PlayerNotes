@@ -5,6 +5,7 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.OptionalArgument;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
@@ -32,14 +33,14 @@ public class ListCommand extends AsyncCommand
 			viewer = (RunsafePlayer) executor;
 		List<String> notes = new ArrayList<String>();
 		if (params.get("player").equals("*"))
-			for (RunsafePlayer player : RunsafeServer.Instance.getOnlinePlayers())
+			for (IPlayer player : RunsafeServer.Instance.getOnlinePlayers())
 				notes.addAll(getNotes(viewer, player, params.containsKey("filter") ? params.get("filter") : null, false));
 		else
 			notes = getNotes(viewer, RunsafeServer.Instance.getPlayer(params.get("player")), null, true);
 		return Strings.join(notes, "\n");
 	}
 
-	private List<String> getNotes(RunsafePlayer viewer, RunsafePlayer player, String tier, boolean offline)
+	private List<String> getNotes(IPlayer viewer, IPlayer player, String tier, boolean offline)
 	{
 		List<String> notes = new ArrayList<String>();
 		if (player == null)

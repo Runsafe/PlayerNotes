@@ -5,8 +5,8 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeServer;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 import java.util.Map;
 
@@ -24,7 +24,7 @@ public class ClearCommand extends AsyncCommand
 	@Override
 	public String OnAsyncExecute(ICommandExecutor executor, Map<String, String> params)
 	{
-		RunsafePlayer target = RunsafeServer.Instance.getPlayer(params.get("player"));
+		IPlayer target = RunsafeServer.Instance.getPlayer(params.get("player"));
 		if (params.get("tier").equals("*"))
 		{
 			manager.clearAllNotesForPlayer(target);

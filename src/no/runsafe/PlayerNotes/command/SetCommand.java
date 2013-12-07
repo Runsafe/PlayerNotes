@@ -6,6 +6,7 @@ import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.argument.TrailingArgument;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.framework.text.ChatColour;
@@ -35,7 +36,7 @@ public class SetCommand extends AsyncCommand
 	@Override
 	public String OnAsyncExecute(ICommandExecutor executor, Map<String, String> params)
 	{
-		RunsafePlayer target = RunsafeServer.Instance.getPlayer(params.get("player"));
+		IPlayer target = RunsafeServer.Instance.getPlayer(params.get("player"));
 		String note = params.get("note");
 
 		if (!executor.hasPermission("runsafe.note.colour"))

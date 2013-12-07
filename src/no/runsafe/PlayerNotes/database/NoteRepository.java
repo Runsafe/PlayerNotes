@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.IRow;
 import no.runsafe.framework.api.database.Repository;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
+import no.runsafe.framework.api.player.IPlayer;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class NoteRepository extends Repository
 		this.database = database;
 	}
 
-	public List<Note> get(RunsafePlayer player)
+	public List<Note> get(IPlayer player)
 	{
 		return Lists.transform(
 			database.Query("SELECT * FROM playerNotes WHERE playerName=?", player.getName()),
@@ -40,7 +40,7 @@ public class NoteRepository extends Repository
 		);
 	}
 
-	public Note get(RunsafePlayer player, String tier)
+	public Note get(IPlayer player, String tier)
 	{
 		IRow data = database.QueryRow(
 			"SELECT * FROM playerNotes WHERE playerName=? AND tier=?",
@@ -55,7 +55,7 @@ public class NoteRepository extends Repository
 		return note;
 	}
 
-	public void persist(RunsafePlayer player, String tier, String note, String setter)
+	public void persist(IPlayer player, String tier, String note, String setter)
 	{
 		if (note == null || note.isEmpty())
 			database.Execute("DELETE FROM playerNotes WHERE playerName=? AND tier=?", player.getName(), tier);
@@ -67,7 +67,7 @@ public class NoteRepository extends Repository
 			);
 	}
 
-	public void clear(RunsafePlayer player)
+	public void clear(IPlayer player)
 	{
 		database.Execute("DELETE FROM playerNotes WHERE playerName=?", player.getName());
 	}

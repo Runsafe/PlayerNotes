@@ -7,8 +7,8 @@ import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IConsole;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeServer;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.framework.text.ChatColour;
 import no.runsafe.framework.text.ConsoleColour;
 import org.joda.time.DateTime;
@@ -27,23 +27,23 @@ public class NoteManager implements IConfigurationChanged
 		this.scheduler = scheduler;
 	}
 
-	public void setNoteForPlayer(RunsafePlayer executor, RunsafePlayer player, String tier, String note)
+	public void setNoteForPlayer(IPlayer executor, IPlayer player, String tier, String note)
 	{
 		String setter = (executor == null ? "Server" : executor.getName());
 		repository.persist(player, tier, note, setter);
 	}
 
-	public void clearNoteForPlayer(RunsafePlayer player, String tier)
+	public void clearNoteForPlayer(IPlayer player, String tier)
 	{
 		repository.persist(player, tier, null, null);
 	}
 
-	public void clearAllNotesForPlayer(RunsafePlayer player)
+	public void clearAllNotesForPlayer(IPlayer player)
 	{
 		repository.clear(player);
 	}
 
-	public void sendNotices(final RunsafePlayer player)
+	public void sendNotices(final IPlayer player)
 	{
 		List<Note> notes = repository.get(player);
 		if (notes != null && notes.size() > 0)
@@ -61,9 +61,9 @@ public class NoteManager implements IConfigurationChanged
 	class Notifier implements Runnable
 	{
 		private final Note note;
-		private final RunsafePlayer player;
+		private final IPlayer player;
 
-		Notifier(Note note, RunsafePlayer player)
+		Notifier(Note note, IPlayer player)
 		{
 			this.note = note;
 			this.player = player;
@@ -74,13 +74,13 @@ public class NoteManager implements IConfigurationChanged
 		{
 			String message = formatMessageForGame(note.getTier(), player, note);
 			output.logInformation(formatMessageForConsole(note.getTier(), player, note));
-			for (RunsafePlayer target : server.getOnlinePlayers())
+			for (IPlayer target : server.getOnlinePlayers())
 				if (target.hasPermission(note.getPermission()))
 					target.sendMessage(message);
 		}
 	}
 
-	public List<String> getNotes(RunsafePlayer player, RunsafePlayer viewer, String tierFilter)
+	public List<String> getNotes(IPlayer player, IPlayer viewer, String tierFilter)
 	{
 		List<String> result = new ArrayList<String>();
 		List<Note> notes = repository.get(player);
@@ -105,7 +105,7 @@ public class NoteManager implements IConfigurationChanged
 				tierFormat.put(tier, tierFormat.get(tier).replace("\\n", "\n"));
 	}
 
-	private String formatMessageForGame(String tier, RunsafePlayer player, Note message)
+	private String formatMessageForGame(String tier, IPlayer player, Note message)
 	{
 		return ChatColour.ToMinecraft(String.format(
 			gameFormat,
@@ -115,7 +115,7 @@ public class NoteManager implements IConfigurationChanged
 		));
 	}
 
-	private String formatMessageForConsole(String tier, RunsafePlayer player, Note message)
+	private String formatMessageForConsole(String tier, IPlayer player, Note message)
 	{
 		return ChatColour.ToConsole(String.format(
 			consoleFormat,

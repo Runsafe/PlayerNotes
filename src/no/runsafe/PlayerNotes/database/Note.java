@@ -1,6 +1,6 @@
 package no.runsafe.PlayerNotes.database;
 
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
+import no.runsafe.framework.api.player.IPlayer;
 import org.joda.time.DateTime;
 
 public class Note
@@ -50,7 +50,7 @@ public class Note
 		return String.format("runsafe.note.show.%s", tier);
 	}
 
-	public boolean hasPermission(RunsafePlayer viewer)
+	public boolean hasPermission(IPlayer viewer)
 	{
 		return viewer.hasPermission(getPermission());
 	}
