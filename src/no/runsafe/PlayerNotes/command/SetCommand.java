@@ -2,12 +2,12 @@ package no.runsafe.PlayerNotes.command;
 
 import no.runsafe.PlayerNotes.NoteManager;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.argument.TrailingArgument;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.framework.text.ChatColour;
 
@@ -16,13 +16,14 @@ import java.util.Map;
 
 public class SetCommand extends AsyncCommand
 {
-	public SetCommand(NoteManager manager, IScheduler scheduler)
+	public SetCommand(NoteManager manager, IScheduler scheduler, IServer server)
 	{
 		super(
 			"set", "Sets a note for the given player", "runsafe.note.set.<tier>", scheduler,
 			new RequiredArgument("tier"), new TrailingArgument("note")
 		);
 		this.manager = manager;
+		this.server = server;
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class SetCommand extends AsyncCommand
 	@Override
 	public String OnAsyncExecute(ICommandExecutor executor, Map<String, String> params)
 	{
-		IPlayer target = RunsafeServer.Instance.getPlayer(params.get("player"));
+		IPlayer target = server.getPlayer(params.get("player"));
 		String note = params.get("note");
 
 		if (!executor.hasPermission("runsafe.note.colour"))
@@ -51,4 +52,5 @@ public class SetCommand extends AsyncCommand
 	}
 
 	private final NoteManager manager;
+	private final IServer server;
 }

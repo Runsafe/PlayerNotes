@@ -6,9 +6,9 @@ import no.runsafe.PlayerNotes.database.NoteRepository;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IConsole;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.text.ChatColour;
 import no.runsafe.framework.text.ConsoleColour;
 import org.joda.time.DateTime;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class NoteManager implements IConfigurationChanged
 {
-	public NoteManager(NoteRepository repository, RunsafeServer server, IConsole output, IScheduler scheduler)
+	public NoteManager(NoteRepository repository, IServer server, IConsole output, IScheduler scheduler)
 	{
 		this.repository = repository;
 		this.server = server;
@@ -143,7 +143,7 @@ public class NoteManager implements IConfigurationChanged
 	}
 
 	private final NoteRepository repository;
-	private final RunsafeServer server;
+	private final IServer server;
 	private final IConsole output;
 	private final IScheduler scheduler;
 	private String gameFormat;
