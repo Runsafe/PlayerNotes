@@ -7,7 +7,6 @@ import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.OptionalArgument;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 
 import java.util.ArrayList;
@@ -29,9 +28,9 @@ public class ListCommand extends AsyncCommand
 	@Override
 	public String OnAsyncExecute(ICommandExecutor executor, Map<String, String> params)
 	{
-		RunsafePlayer viewer = null;
-		if (executor instanceof RunsafePlayer)
-			viewer = (RunsafePlayer) executor;
+		IPlayer viewer = null;
+		if (executor instanceof IPlayer)
+			viewer = (IPlayer) executor;
 		List<String> notes = new ArrayList<String>();
 		if (params.get("player").equals("*"))
 			for (IPlayer player : server.getOnlinePlayers())
