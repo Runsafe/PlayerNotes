@@ -7,7 +7,7 @@ import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.OptionalArgument;
 import no.runsafe.framework.api.player.IPlayer;
-import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class ListCommand extends AsyncCommand
 				notes.addAll(getNotes(viewer, player, params.containsKey("filter") ? params.get("filter") : null, false));
 		else
 			notes = getNotes(viewer, server.getPlayer(params.get("player")), null, true);
-		return Strings.join(notes, "\n");
+		return StringUtils.join(notes, "\n");
 	}
 
 	private List<String> getNotes(IPlayer viewer, IPlayer player, String tier, boolean offline)
