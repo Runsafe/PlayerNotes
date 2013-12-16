@@ -9,8 +9,6 @@ import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.text.ChatColour;
-import no.runsafe.framework.text.ConsoleColour;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -76,7 +74,7 @@ public class NoteManager implements IConfigurationChanged
 			output.logInformation(formatMessageForConsole(note.getTier(), player, note));
 			for (IPlayer target : server.getOnlinePlayers())
 				if (target.hasPermission(note.getPermission()))
-					target.sendMessage(message);
+					target.sendColouredMessage(message);
 		}
 	}
 
@@ -107,22 +105,12 @@ public class NoteManager implements IConfigurationChanged
 
 	private String formatMessageForGame(String tier, IPlayer player, Note message)
 	{
-		return ChatColour.ToMinecraft(String.format(
-			gameFormat,
-			tier,
-			player.getPrettyName(),
-			convert(message)
-		));
+		return String.format(gameFormat, tier, player.getPrettyName(), convert(message));
 	}
 
 	private String formatMessageForConsole(String tier, IPlayer player, Note message)
 	{
-		return ChatColour.ToConsole(String.format(
-			consoleFormat,
-			tier,
-			ConsoleColour.FromMinecraft(player.getPrettyName()),
-			convert(message)
-		));
+		return String.format(consoleFormat, tier, player.getPrettyName(), convert(message));
 	}
 
 	private String convert(Note note)
