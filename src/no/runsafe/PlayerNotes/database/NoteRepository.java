@@ -22,7 +22,7 @@ public class NoteRepository extends Repository
 	public List<Note> get(IPlayer player)
 	{
 		return Lists.transform(
-			database.Query("SELECT * FROM playerNotes WHERE playerName=?", player.getName()),
+			database.query("SELECT * FROM playerNotes WHERE playerName=?", player.getName()),
 			new Function<IRow, Note>()
 			{
 				@Override
@@ -42,7 +42,7 @@ public class NoteRepository extends Repository
 
 	public Note get(IPlayer player, String tier)
 	{
-		IRow data = database.QueryRow(
+		IRow data = database.queryRow(
 			"SELECT * FROM playerNotes WHERE playerName=? AND tier=?",
 			player.getName(), tier
 		);
@@ -58,9 +58,9 @@ public class NoteRepository extends Repository
 	public void persist(IPlayer player, String tier, String note, String setter)
 	{
 		if (note == null || note.isEmpty())
-			database.Execute("DELETE FROM playerNotes WHERE playerName=? AND tier=?", player.getName(), tier);
+			database.execute("DELETE FROM playerNotes WHERE playerName=? AND tier=?", player.getName(), tier);
 		else
-			database.Update(
+			database.update(
 				"INSERT INTO playerNotes (playerName, tier, note, set_by, set_at) VALUES (?, ?, ?, ?, NOW()) " +
 					"ON DUPLICATE KEY UPDATE note=VALUES(note),set_by=VALUES(set_by),set_at=NOW()",
 				player.getName(), tier, note, setter
@@ -69,7 +69,7 @@ public class NoteRepository extends Repository
 
 	public void clear(IPlayer player)
 	{
-		database.Execute("DELETE FROM playerNotes WHERE playerName=?", player.getName());
+		database.execute("DELETE FROM playerNotes WHERE playerName=?", player.getName());
 	}
 
 	@Override
