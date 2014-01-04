@@ -82,7 +82,7 @@ public class NoteRepository extends Repository
 	@Override
 	public HashMap<Integer, List<String>> getSchemaUpdateQueries()
 	{
-		HashMap<Integer, List<String>> queries = new LinkedHashMap<Integer, List<String>>();
+		HashMap<Integer, List<String>> queries = new LinkedHashMap<Integer, List<String>>(2);
 		List<String> sql = new ArrayList<String>();
 		sql.add(
 			"CREATE TABLE IF NOT EXISTS `playerNotes` (" +
