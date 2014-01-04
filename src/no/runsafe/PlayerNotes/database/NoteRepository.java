@@ -83,6 +83,7 @@ public class NoteRepository extends Repository
 	public HashMap<Integer, List<String>> getSchemaUpdateQueries()
 	{
 		HashMap<Integer, List<String>> queries = new LinkedHashMap<Integer, List<String>>(2);
+
 		List<String> sql = new ArrayList<String>();
 		sql.add(
 			"CREATE TABLE IF NOT EXISTS `playerNotes` (" +
@@ -93,10 +94,12 @@ public class NoteRepository extends Repository
 				")"
 		);
 		queries.put(1, sql);
+
 		sql = new ArrayList<String>();
 		sql.add("ALTER TABLE `playerNotes` ADD COLUMN `set_by` VARCHAR(50) NULL");
 		sql.add("ALTER TABLE `playerNotes` ADD COLUMN `set_at` DATETIME NULL");
 		queries.put(2, sql);
+
 		return queries;
 	}
 
