@@ -2,15 +2,10 @@ package no.runsafe.PlayerNotes.database;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import no.runsafe.framework.api.database.IDatabase;
-import no.runsafe.framework.api.database.IRow;
-import no.runsafe.framework.api.database.Repository;
+import no.runsafe.framework.api.database.*;
 import no.runsafe.framework.api.player.IPlayer;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class NoteRepository extends Repository
@@ -80,27 +75,25 @@ public class NoteRepository extends Repository
 	}
 
 	@Override
-	public HashMap<Integer, List<String>> getSchemaUpdateQueries()
+	public ISchemaUpdate getSchemaUpdateQueries()
 	{
-		HashMap<Integer, List<String>> queries = new LinkedHashMap<Integer, List<String>>(2);
+		ISchemaUpdate update = new SchemaUpdate();
 
-		List<String> sql = new ArrayList<String>();
-		sql.add(
+		update.addQueries(
 			"CREATE TABLE IF NOT EXISTS `playerNotes` (" +
 				"`playerName` varchar(50)NOT NULL," +
 				"`tier` varchar(50)NOT NULL," +
 				"`note` varchar(100)NOT NULL," +
 				"PRIMARY KEY(`playerName`,`tier`)" +
-				")"
+			")"
 		);
-		queries.put(1, sql);
 
-		sql = new ArrayList<String>();
-		sql.add("ALTER TABLE `playerNotes` ADD COLUMN `set_by` VARCHAR(50) NULL");
-		sql.add("ALTER TABLE `playerNotes` ADD COLUMN `set_at` DATETIME NULL");
-		queries.put(2, sql);
+		update.addQueries(
+			"ALTER TABLE `playerNotes` ADD COLUMN `set_by` VARCHAR(50) NULL",
+			"ALTER TABLE `playerNotes` ADD COLUMN `set_at` DATETIME NULL"
+		);
 
-		return queries;
+		return update;
 	}
 
 	private final IDatabase database;
