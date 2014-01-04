@@ -10,6 +10,7 @@ import no.runsafe.framework.api.player.IPlayer;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class NoteRepository extends Repository
@@ -81,7 +82,7 @@ public class NoteRepository extends Repository
 	@Override
 	public HashMap<Integer, List<String>> getSchemaUpdateQueries()
 	{
-		HashMap<Integer, List<String>> queries = new HashMap<Integer, List<String>>();
+		HashMap<Integer, List<String>> queries = new LinkedHashMap<Integer, List<String>>();
 		List<String> sql = new ArrayList<String>();
 		sql.add(
 			"CREATE TABLE IF NOT EXISTS `playerNotes` (" +
