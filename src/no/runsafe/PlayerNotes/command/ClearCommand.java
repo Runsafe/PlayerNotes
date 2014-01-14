@@ -5,10 +5,9 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
+import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.player.IPlayer;
-
-import java.util.Map;
 
 public class ClearCommand extends AsyncCommand
 {
@@ -23,7 +22,7 @@ public class ClearCommand extends AsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(ICommandExecutor executor, Map<String, String> params)
+	public String OnAsyncExecute(ICommandExecutor executor, IArgumentList params)
 	{
 		IPlayer target = server.getPlayer(params.get("player"));
 		if (params.get("tier").equals("*"))

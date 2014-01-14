@@ -5,13 +5,13 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
+import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.OptionalArgument;
 import no.runsafe.framework.api.player.IPlayer;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ListCommand extends AsyncCommand
 {
@@ -26,7 +26,7 @@ public class ListCommand extends AsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(ICommandExecutor executor, Map<String, String> params)
+	public String OnAsyncExecute(ICommandExecutor executor, IArgumentList params)
 	{
 		IPlayer viewer = null;
 		if (executor instanceof IPlayer)

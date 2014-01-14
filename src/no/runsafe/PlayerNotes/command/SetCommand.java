@@ -5,13 +5,13 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
+import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.argument.TrailingArgument;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.text.ChatColour;
 
 import java.util.List;
-import java.util.Map;
 
 public class SetCommand extends AsyncCommand
 {
@@ -34,7 +34,7 @@ public class SetCommand extends AsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(ICommandExecutor executor, Map<String, String> params)
+	public String OnAsyncExecute(ICommandExecutor executor, IArgumentList params)
 	{
 		IPlayer target = server.getPlayer(params.get("player"));
 		String note = params.get("note");
