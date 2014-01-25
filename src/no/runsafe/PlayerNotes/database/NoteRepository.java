@@ -10,11 +10,6 @@ import java.util.List;
 
 public class NoteRepository extends Repository
 {
-	public NoteRepository(IDatabase database)
-	{
-		this.database = database;
-	}
-
 	public List<Note> get(IPlayer player)
 	{
 		return Lists.transform(
@@ -95,6 +90,4 @@ public class NoteRepository extends Repository
 
 		return update;
 	}
-
-	private final IDatabase database;
 }
