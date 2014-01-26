@@ -6,7 +6,6 @@ import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
-import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.player.IPlayer;
 
 public class ClearCommand extends AsyncCommand
@@ -15,7 +14,7 @@ public class ClearCommand extends AsyncCommand
 	{
 		super(
 			"clear", "Removes a note from a player, or all if * is used.", "runsafe.note.clear.<tier>", scheduler,
-			new RequiredArgument("tier")
+			new TierArgument(manager)
 		);
 		this.manager = manager;
 		this.server = server;
@@ -25,6 +24,8 @@ public class ClearCommand extends AsyncCommand
 	public String OnAsyncExecute(ICommandExecutor executor, IArgumentList params)
 	{
 		IPlayer target = server.getPlayer(params.get("player"));
+		if (target == null)
+			return null;
 		if (params.get("tier").equals("*"))
 		{
 			manager.clearAllNotesForPlayer(target);

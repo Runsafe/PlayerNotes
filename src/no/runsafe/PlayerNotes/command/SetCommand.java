@@ -6,12 +6,9 @@ import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
-import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.argument.TrailingArgument;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.text.ChatColour;
-
-import java.util.List;
 
 public class SetCommand extends AsyncCommand
 {
@@ -19,24 +16,18 @@ public class SetCommand extends AsyncCommand
 	{
 		super(
 			"set", "Sets a note for the given player", "runsafe.note.set.<tier>", scheduler,
-			new RequiredArgument("tier"), new TrailingArgument("note")
+			new TierArgument(manager), new TrailingArgument("note")
 		);
 		this.manager = manager;
 		this.server = server;
 	}
 
 	@Override
-	public List<String> getParameterOptions(String parameter)
-	{
-		if (parameter.equals("tier"))
-			return manager.getTiers();
-		return null;
-	}
-
-	@Override
 	public String OnAsyncExecute(ICommandExecutor executor, IArgumentList params)
 	{
 		IPlayer target = server.getPlayer(params.get("player"));
+		if (target == null)
+			return null;
 		String note = params.get("note");
 
 		if (!executor.hasPermission("runsafe.note.colour"))
