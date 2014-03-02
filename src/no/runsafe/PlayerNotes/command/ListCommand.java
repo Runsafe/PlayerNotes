@@ -36,7 +36,7 @@ public class ListCommand extends AsyncCommand
 			for (IPlayer player : server.getOnlinePlayers())
 				notes.addAll(getNotes(viewer, player, params.containsKey("filter") ? params.get("filter") : null, false));
 		else
-			notes = getNotes(viewer, server.getPlayer(params.get("player")), null, true);
+			notes = getNotes(viewer, (IPlayer) params.getValue("player"), null, true);
 		return StringUtils.join(notes, "\n");
 	}
 

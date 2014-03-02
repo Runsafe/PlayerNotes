@@ -2,7 +2,6 @@ package no.runsafe.PlayerNotes.command;
 
 import no.runsafe.PlayerNotes.NoteManager;
 import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
@@ -12,20 +11,19 @@ import no.runsafe.framework.text.ChatColour;
 
 public class SetCommand extends AsyncCommand
 {
-	public SetCommand(NoteManager manager, IScheduler scheduler, IServer server)
+	public SetCommand(NoteManager manager, IScheduler scheduler)
 	{
 		super(
 			"set", "Sets a note for the given player", "runsafe.note.set.<tier>", scheduler,
 			new TierArgument(manager), new TrailingArgument("note")
 		);
 		this.manager = manager;
-		this.server = server;
 	}
 
 	@Override
 	public String OnAsyncExecute(ICommandExecutor executor, IArgumentList params)
 	{
-		IPlayer target = server.getPlayer(params.get("player"));
+		IPlayer target = params.getValue("player");
 		if (target == null)
 			return null;
 		String note = params.get("note");
@@ -42,5 +40,4 @@ public class SetCommand extends AsyncCommand
 	}
 
 	private final NoteManager manager;
-	private final IServer server;
 }
