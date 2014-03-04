@@ -10,7 +10,7 @@ public class NoteCommand extends Command
 {
 	public NoteCommand(NoteManager manager, IScheduler scheduler, IServer server)
 	{
-		super("note", "Manage player notes", "runsafe.notes", new Player.Any().require());
+		super("note", "Manage player notes", "runsafe.notes", new Player().require());
 
 		addSubCommand(new SetCommand(manager, scheduler));
 		addSubCommand(new ClearCommand(manager, scheduler));

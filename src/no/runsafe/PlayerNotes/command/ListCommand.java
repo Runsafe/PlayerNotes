@@ -34,7 +34,7 @@ public class ListCommand extends AsyncCommand
 		List<String> notes = new ArrayList<String>();
 		if (params.get("player").equals("*"))
 			for (IPlayer player : server.getOnlinePlayers())
-				notes.addAll(getNotes(viewer, player, params.containsKey("filter") ? params.get("filter") : null, false));
+				notes.addAll(getNotes(viewer, player, params.get("filter"), false));
 		else
 			notes = getNotes(viewer, (IPlayer) params.getValue("player"), null, true);
 		return StringUtils.join(notes, "\n");
@@ -57,4 +57,5 @@ public class ListCommand extends AsyncCommand
 
 	private final NoteManager manager;
 	private final IServer server;
+
 }
