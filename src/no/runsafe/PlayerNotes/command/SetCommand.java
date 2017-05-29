@@ -26,7 +26,7 @@ public class SetCommand extends AsyncCommand
 		IPlayer target = params.getValue("player");
 		if (target == null)
 			return null;
-		String note = params.get("note");
+		String note = params.getValue("note");
 
 		if (!executor.hasPermission("runsafe.note.colour"))
 			note = ChatColour.Strip(note);
@@ -35,8 +35,9 @@ public class SetCommand extends AsyncCommand
 		if (executor instanceof IPlayer)
 			setter = (IPlayer) executor;
 
-		manager.setNoteForPlayer(setter, target, params.get("tier"), note);
-		return String.format(("%s note set for %s."), params.get("tier"), target.getPrettyName());
+		String tier = params.getValue("tier");
+		manager.setNoteForPlayer(setter, target, tier, note);
+		return String.format(("%s note set for %s."), tier, target.getPrettyName());
 	}
 
 	private final NoteManager manager;

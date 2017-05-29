@@ -24,15 +24,16 @@ public class ClearCommand extends AsyncCommand
 		IPlayer target = params.getValue("player");
 		if (target == null)
 			return null;
-		if (params.get("tier").equals("*"))
+		String tier = params.getValue("tier");
+		if (tier.equals("*"))
 		{
 			manager.clearAllNotesForPlayer(target);
 			return String.format("All notes for %s cleared.", target.getPrettyName());
 		}
 		else
 		{
-			manager.clearNoteForPlayer(target, params.get("tier"));
-			return String.format("%s note for %s cleared.", params.get("tier"), target.getPrettyName());
+			manager.clearNoteForPlayer(target, tier);
+			return String.format("%s note for %s cleared.", tier, target.getPrettyName());
 		}
 	}
 
