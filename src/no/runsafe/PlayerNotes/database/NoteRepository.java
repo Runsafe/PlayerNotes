@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import no.runsafe.framework.api.database.*;
 import no.runsafe.framework.api.player.IPlayer;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -63,12 +64,14 @@ public class NoteRepository extends Repository
 		database.execute("DELETE FROM playerNotes WHERE playerName=?", player.getName());
 	}
 
+	@Nonnull
 	@Override
 	public String getTableName()
 	{
 		return "playerNotes";
 	}
 
+	@Nonnull
 	@Override
 	public ISchemaUpdate getSchemaUpdateQueries()
 	{
