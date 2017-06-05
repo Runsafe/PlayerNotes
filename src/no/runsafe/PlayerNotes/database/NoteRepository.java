@@ -14,7 +14,7 @@ public class NoteRepository extends Repository
 	public List<Note> get(IPlayer player)
 	{
 		return Lists.transform(
-			database.query("SELECT * FROM playerNotes WHERE player=?", player.getName()),
+			database.query("SELECT * FROM playerNotes WHERE player=?", player.getUniqueId().toString()),
 			new Function<IRow, Note>()
 			{
 				@Override
@@ -36,7 +36,7 @@ public class NoteRepository extends Repository
 	{
 		IRow data = database.queryRow(
 			"SELECT * FROM playerNotes WHERE player=? AND tier=?",
-			player.getName(), tier
+			player.getUniqueId().toString(), tier
 		);
 		if (data.isEmpty())
 			return null;
