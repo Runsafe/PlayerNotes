@@ -26,7 +26,7 @@ public class Plugin extends RunsafeConfigurablePlugin
 		addComponent(PlayerJoin.class);
 
 		// Commands
-		Command note = new Command("note", "Manage player notes", "runsafe.notes", new Player().require());
+		Command note = new Command("note", "Manage player notes", "runsafe.notes");
 		note.addSubCommand(getInstance(SetCommand.class));
 		note.addSubCommand(getInstance(ClearCommand.class));
 		note.addSubCommand(getInstance(ListCommand.class));

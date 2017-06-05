@@ -5,6 +5,7 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
+import no.runsafe.framework.api.command.argument.Player;
 import no.runsafe.framework.api.command.argument.TrailingArgument;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.text.ChatColour;
@@ -14,8 +15,13 @@ public class SetCommand extends AsyncCommand
 	public SetCommand(NoteManager manager, IScheduler scheduler)
 	{
 		super(
-			"set", "Sets a note for the given player", "runsafe.note.set.<tier>", scheduler,
-			new TierArgument(manager), new TrailingArgument("note")
+			"set",
+			"Sets a note for the given player",
+			"runsafe.note.set.<tier>",
+			scheduler,
+			new Player().require(),
+			new TierArgument(manager),
+			new TrailingArgument("note")
 		);
 		this.manager = manager;
 	}

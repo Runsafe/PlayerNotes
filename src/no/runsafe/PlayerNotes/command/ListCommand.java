@@ -5,6 +5,7 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
+import no.runsafe.framework.api.command.argument.Player;
 import no.runsafe.framework.api.player.IPlayer;
 import org.apache.commons.lang.StringUtils;
 
@@ -16,7 +17,11 @@ public class ListCommand extends AsyncCommand
 	public ListCommand(NoteManager manager, IScheduler scheduler)
 	{
 		super(
-			"list", "Lists all notes you can see for the given player", null, scheduler
+			"list",
+			"Lists all notes you can see for the given player",
+			null,
+			scheduler,
+			new Player().require()
 		);
 		this.manager = manager;
 	}

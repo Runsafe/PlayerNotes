@@ -5,6 +5,7 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
+import no.runsafe.framework.api.command.argument.Player;
 import no.runsafe.framework.api.player.IPlayer;
 
 public class ClearCommand extends AsyncCommand
@@ -12,7 +13,11 @@ public class ClearCommand extends AsyncCommand
 	public ClearCommand(NoteManager manager, IScheduler scheduler)
 	{
 		super(
-			"clear", "Removes a note from a player, or all if * is used.", "runsafe.note.clear.<tier>", scheduler,
+			"clear",
+			"Removes a note from a player, or all if * is used.",
+			"runsafe.note.clear.<tier>",
+			scheduler,
+			new Player().require(),
 			new TierArgument(manager)
 		);
 		this.manager = manager;
