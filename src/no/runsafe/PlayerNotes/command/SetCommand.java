@@ -42,6 +42,10 @@ public class SetCommand extends AsyncCommand
 			setter = (IPlayer) executor;
 
 		String tier = params.getValue("tier");
+
+		if (tier.equals("*"))
+			return "&cThis sub-command does not support wildcards.";
+
 		manager.setNoteForPlayer(setter, target, tier, note);
 		return String.format(("%s note set for %s."), tier, target.getPrettyName());
 	}

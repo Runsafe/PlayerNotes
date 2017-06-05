@@ -23,6 +23,7 @@ public class TierArgument extends RequiredArgument implements ITabComplete, IVal
 	public List<String> getAlternatives(IPlayer player, String filter)
 	{
 		List<String> alternatives = manager.getTiers();
+		alternatives.add("*");
 		if (filter == null || filter.isEmpty())
 			return alternatives;
 
