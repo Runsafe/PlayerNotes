@@ -5,6 +5,7 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
+import no.runsafe.framework.api.command.argument.Player;
 import no.runsafe.framework.api.player.IPlayer;
 
 public class ClearCommand extends AsyncCommand
@@ -12,7 +13,11 @@ public class ClearCommand extends AsyncCommand
 	public ClearCommand(NoteManager manager, IScheduler scheduler)
 	{
 		super(
-			"clear", "Removes a note from a player, or all if * is used.", "runsafe.note.clear.<tier>", scheduler,
+			"clear",
+			"Removes a note from a player, or all if * is used.",
+			"runsafe.note.clear.<tier>",
+			scheduler,
+			new Player().require(),
 			new TierArgument(manager)
 		);
 		this.manager = manager;
@@ -24,15 +29,16 @@ public class ClearCommand extends AsyncCommand
 		IPlayer target = params.getValue("player");
 		if (target == null)
 			return null;
-		if (params.get("tier").equals("*"))
+		String tier = params.getValue("tier");
+		if (tier.equals("*"))
 		{
 			manager.clearAllNotesForPlayer(target);
 			return String.format("All notes for %s cleared.", target.getPrettyName());
 		}
 		else
 		{
-			manager.clearNoteForPlayer(target, params.get("tier"));
-			return String.format("%s note for %s cleared.", params.get("tier"), target.getPrettyName());
+			manager.clearNoteForPlayer(target, tier);
+			return String.format("%s note for %s cleared.", tier, target.getPrettyName());
 		}
 	}
 

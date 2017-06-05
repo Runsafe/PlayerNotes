@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import no.runsafe.framework.api.database.*;
 import no.runsafe.framework.api.player.IPlayer;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class NoteRepository extends Repository
 	public List<Note> get(IPlayer player)
 	{
 		return Lists.transform(
-			database.query("SELECT * FROM playerNotes WHERE playerName=?", player.getName()),
+			database.query("SELECT * FROM playerNotes WHERE player=?", player.getUniqueId().toString()),
 			new Function<IRow, Note>()
 			{
 				@Override
@@ -34,8 +35,8 @@ public class NoteRepository extends Repository
 	public Note get(IPlayer player, String tier)
 	{
 		IRow data = database.queryRow(
-			"SELECT * FROM playerNotes WHERE playerName=? AND tier=?",
-			player.getName(), tier
+			"SELECT * FROM playerNotes WHERE player=? AND tier=?",
+			player.getUniqueId().toString(), tier
 		);
 		if (data.isEmpty())
 			return null;
@@ -49,26 +50,28 @@ public class NoteRepository extends Repository
 	public void persist(IPlayer player, String tier, String note, String setter)
 	{
 		if (note == null || note.isEmpty())
-			database.execute("DELETE FROM playerNotes WHERE playerName=? AND tier=?", player.getName(), tier);
+			database.execute("DELETE FROM playerNotes WHERE player=? AND tier=?", player.getUniqueId().toString(), tier);
 		else
 			database.update(
-				"INSERT INTO playerNotes (playerName, tier, note, set_by, set_at) VALUES (?, ?, ?, ?, NOW()) " +
+				"INSERT INTO playerNotes (player, tier, note, set_by, set_at) VALUES (?, ?, ?, ?, NOW()) " +
 					"ON DUPLICATE KEY UPDATE note=VALUES(note),set_by=VALUES(set_by),set_at=NOW()",
-				player.getName(), tier, note, setter
+				player.getUniqueId().toString(), tier, note, setter
 			);
 	}
 
 	public void clear(IPlayer player)
 	{
-		database.execute("DELETE FROM playerNotes WHERE playerName=?", player.getName());
+		database.execute("DELETE FROM playerNotes WHERE player=?", player.getUniqueId().toString());
 	}
 
+	@Nonnull
 	@Override
 	public String getTableName()
 	{
 		return "playerNotes";
 	}
 
+	@Nonnull
 	@Override
 	public ISchemaUpdate getSchemaUpdateQueries()
 	{
@@ -86,6 +89,16 @@ public class NoteRepository extends Repository
 		update.addQueries(
 			"ALTER TABLE `playerNotes` ADD COLUMN `set_by` VARCHAR(50) NULL",
 			"ALTER TABLE `playerNotes` ADD COLUMN `set_at` DATETIME NULL"
+		);
+
+		update.addQueries(
+			String.format("ALTER TABLE `%s` CHANGE `playerName` `player` varchar(50) NOT NULL", getTableName()),
+			String.format( // Player names -> Unique IDs
+				"UPDATE IGNORE `%s` SET `player` = " +
+					"COALESCE((SELECT `uuid` FROM player_db WHERE `name`=`%s`.`player`), `player`) " +
+					"WHERE length(`player`) != 36",
+				getTableName(), getTableName()
+			)
 		);
 
 		return update;
