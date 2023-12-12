@@ -20,7 +20,7 @@ public class SetCommand extends AsyncCommand
 			"runsafe.note.set.<tier>",
 			scheduler,
 			new Player().require(),
-			new TierArgument(manager),
+			new TierArgument(manager).require(),
 			new TrailingArgument("note")
 		);
 		this.manager = manager;
@@ -29,9 +29,7 @@ public class SetCommand extends AsyncCommand
 	@Override
 	public String OnAsyncExecute(ICommandExecutor executor, IArgumentList params)
 	{
-		IPlayer target = params.getValue("player");
-		if (target == null)
-			return null;
+		IPlayer target = params.getRequired("player");
 		String note = params.getValue("note");
 
 		if (!executor.hasPermission("runsafe.note.colour"))
@@ -41,7 +39,7 @@ public class SetCommand extends AsyncCommand
 		if (executor instanceof IPlayer)
 			setter = (IPlayer) executor;
 
-		String tier = params.getValue("tier");
+		String tier = params.getRequired("tier");
 
 		if (tier.equals("*"))
 			return "&cThis sub-command does not support wildcards.";

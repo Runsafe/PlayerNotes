@@ -5,7 +5,6 @@ import no.runsafe.PlayerNotes.database.NoteRepository;
 import no.runsafe.PlayerNotes.event.PlayerJoin;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.api.command.Command;
-import no.runsafe.framework.api.command.argument.Player;
 import no.runsafe.framework.features.Commands;
 import no.runsafe.framework.features.Database;
 import no.runsafe.framework.features.Events;

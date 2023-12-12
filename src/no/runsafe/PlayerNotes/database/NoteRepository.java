@@ -1,12 +1,10 @@
 package no.runsafe.PlayerNotes.database;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import no.runsafe.framework.api.database.*;
 import no.runsafe.framework.api.player.IPlayer;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class NoteRepository extends Repository
@@ -14,20 +12,15 @@ public class NoteRepository extends Repository
 	public List<Note> get(IPlayer player)
 	{
 		return Lists.transform(
-			database.query("SELECT * FROM playerNotes WHERE player=?", player.getUniqueId().toString()),
-			new Function<IRow, Note>()
+			database.query("SELECT * FROM playerNotes WHERE player=?", player.getUniqueId().toString()), row ->
 			{
-				@Override
-				public Note apply(@Nullable IRow row)
-				{
-					assert row != null;
-					Note note = new Note();
-					note.setSetter(row.String("set_by"));
-					note.setTimestamp(row.Instant("set_at"));
-					note.setNote(row.String("note"));
-					note.setTier(row.String("tier"));
-					return note;
-				}
+				assert row != null;
+				Note note = new Note();
+				note.setSetter(row.String("set_by"));
+				note.setTimestamp(row.Instant("set_at"));
+				note.setNote(row.String("note"));
+				note.setTier(row.String("tier"));
+				return note;
 			}
 		);
 	}
@@ -50,13 +43,16 @@ public class NoteRepository extends Repository
 	public void persist(IPlayer player, String tier, String note, String setter)
 	{
 		if (note == null || note.isEmpty())
+		{
 			database.execute("DELETE FROM playerNotes WHERE player=? AND tier=?", player.getUniqueId().toString(), tier);
-		else
-			database.update(
-				"INSERT INTO playerNotes (player, tier, note, set_by, set_at) VALUES (?, ?, ?, ?, NOW()) " +
-					"ON DUPLICATE KEY UPDATE note=VALUES(note),set_by=VALUES(set_by),set_at=NOW()",
-				player.getUniqueId().toString(), tier, note, setter
-			);
+			return;
+		}
+
+		database.update(
+			"INSERT INTO playerNotes (player, tier, note, set_by, set_at) VALUES (?, ?, ?, ?, NOW()) " +
+			"ON DUPLICATE KEY UPDATE note=VALUES(note),set_by=VALUES(set_by),set_at=NOW()",
+			player.getUniqueId().toString(), tier, note, setter
+		);
 	}
 
 	public void clear(IPlayer player)
