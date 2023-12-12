@@ -23,7 +23,7 @@ public class NoteRepository extends Repository
 					assert row != null;
 					Note note = new Note();
 					note.setSetter(row.String("set_by"));
-					note.setTimestamp(row.DateTime("set_at"));
+					note.setTimestamp(row.Instant("set_at"));
 					note.setNote(row.String("note"));
 					note.setTier(row.String("tier"));
 					return note;
@@ -42,7 +42,7 @@ public class NoteRepository extends Repository
 			return null;
 		Note note = new Note();
 		note.setSetter(data.String("set_by"));
-		note.setTimestamp(data.DateTime("set_at"));
+		note.setTimestamp(data.Instant("set_at"));
 		note.setNote(data.String("note"));
 		return note;
 	}

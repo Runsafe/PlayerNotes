@@ -9,8 +9,9 @@ import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
-import org.joda.time.DateTime;
+import org.apache.commons.lang.time.DateFormatUtils;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -123,11 +124,11 @@ public class NoteManager implements IConfigurationChanged
 		);
 	}
 
-	private String convert(DateTime date)
+	private String convert(Instant date)
 	{
 		if (date == null)
 			return "-";
-		return date.toString(dateFormat);
+		return DateFormatUtils.format(date.toEpochMilli(), dateFormat);
 	}
 
 	private final NoteRepository repository;

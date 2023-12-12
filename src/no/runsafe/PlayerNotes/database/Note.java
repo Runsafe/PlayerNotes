@@ -1,7 +1,8 @@
 package no.runsafe.PlayerNotes.database;
 
 import no.runsafe.framework.api.player.IPlayer;
-import org.joda.time.DateTime;
+
+import java.time.Instant;
 
 public class Note
 {
@@ -25,12 +26,12 @@ public class Note
 		this.setter = setter;
 	}
 
-	public DateTime getTimestamp()
+	public Instant getTimestamp()
 	{
 		return timestamp;
 	}
 
-	public void setTimestamp(DateTime timestamp)
+	public void setTimestamp(Instant timestamp)
 	{
 		this.timestamp = timestamp;
 	}
@@ -57,6 +58,6 @@ public class Note
 
 	private String note;
 	private String setter;
-	private DateTime timestamp;
+	private Instant timestamp;
 	private String tier;
 }
