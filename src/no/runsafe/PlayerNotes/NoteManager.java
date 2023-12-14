@@ -12,9 +12,7 @@ import no.runsafe.framework.api.player.IPlayer;
 import org.apache.commons.lang.time.DateFormatUtils;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class NoteManager implements IConfigurationChanged
 {
@@ -81,42 +79,14 @@ public class NoteManager implements IConfigurationChanged
 
 	public List<String> getNotes(IPlayer player, IPlayer viewer, String tierFilter)
 	{
-		List<String> result = new ArrayList<>();
-		List<Note> notes = repository.get(player);
-		if (notes == null || notes.isEmpty())
-			return result;
-
-		if (tierFilter == null && viewer == null)
-		{
-			for (Note note : notes)
-				result.add(convert(note));
-
-			return result;
-		}
-
 		if (tierFilter == null)
-		{
-			for (Note note : notes)
-				if (note.hasPermission(viewer))
-					result.add(convert(note));
+			return convertNotes(repository.get(player), viewer);
 
-			return result;
-		}
+		Note note = repository.get(player, tierFilter);
+		if (note == null || (viewer != null && !note.isVisible(viewer)))
+			return new ArrayList<>();
 
-		if (viewer == null)
-		{
-			for (Note note : notes)
-				if (note.getTier().startsWith(tierFilter))
-					result.add(convert(note));
-
-			return result;
-		}
-
-		for (Note note : notes)
-			if (note.getTier().startsWith(tierFilter) && note.hasPermission(viewer))
-				result.add(convert(note));
-
-		return result;
+		return Collections.singletonList(convert(note));
 	}
 
 	@Override
@@ -141,6 +111,27 @@ public class NoteManager implements IConfigurationChanged
 	private String formatMessageForConsole(String tier, IPlayer player, Note message)
 	{
 		return String.format(consoleFormat, tier, player.getPrettyName(), convert(message));
+	}
+
+	private List<String> convertNotes(List<Note> notes, IPlayer viewer)
+	{
+		List<String> result = new ArrayList<>();
+		if (notes == null || notes.isEmpty())
+			return result;
+
+		if (viewer == null)
+		{
+			for (Note note : notes)
+				result.add(convert(note));
+
+			return result;
+		}
+
+		for (Note note : notes)
+			if (note.isVisible(viewer))
+				result.add(convert(note));
+
+		return result;
 	}
 
 	private String convert(Note note)

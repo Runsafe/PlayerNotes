@@ -51,7 +51,7 @@ public class Note
 		return String.format("runsafe.note.show.%s", tier);
 	}
 
-	public boolean hasPermission(IPlayer viewer)
+	public boolean isVisible(IPlayer viewer)
 	{
 		return viewer.hasPermission(getPermission());
 	}
