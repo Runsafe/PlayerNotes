@@ -32,18 +32,14 @@ public class ListCommand extends AsyncCommand
 		IPlayer viewer = null;
 		if (executor instanceof IPlayer)
 			viewer = (IPlayer) executor;
-		List<String> notes = getNotes(viewer, params.getValue("player"));
+		List<String> notes = getNotes(viewer, params.getRequired("player"));
 		return StringUtils.join(notes, "\n");
 	}
 
 	private List<String> getNotes(IPlayer viewer, IPlayer player)
 	{
-		List<String> notes = new ArrayList<String>();
-		if (player == null)
-		{
-			notes.add("Player not found");
-			return notes;
-		}
+		List<String> notes = new ArrayList<>();
+
 		notes.add(String.format("Notes for %s:", player.getPrettyName()));
 		notes.addAll(manager.getNotes(player, viewer, null));
 		return notes;

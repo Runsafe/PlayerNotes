@@ -9,11 +9,10 @@ import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
-import org.joda.time.DateTime;
+import org.apache.commons.lang.time.DateFormatUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.time.Instant;
+import java.util.*;
 
 public class NoteManager implements IConfigurationChanged
 {
@@ -44,11 +43,11 @@ public class NoteManager implements IConfigurationChanged
 	public void sendNotices(final IPlayer player)
 	{
 		List<Note> notes = repository.get(player);
-		if (notes != null && notes.size() > 0)
-		{
-			for (final Note note : notes)
-				scheduler.startSyncTask(new Notifier(note, player), 1);
-		}
+		if (notes == null || notes.isEmpty())
+			return;
+
+		for (final Note note : notes)
+			scheduler.startSyncTask(new Notifier(note, player), 1);
 	}
 
 	public List<String> getTiers()
@@ -80,14 +79,14 @@ public class NoteManager implements IConfigurationChanged
 
 	public List<String> getNotes(IPlayer player, IPlayer viewer, String tierFilter)
 	{
-		List<String> result = new ArrayList<String>();
-		List<Note> notes = repository.get(player);
-		if (notes != null && notes.size() > 0)
-			for (Note note : notes)
-				if (tierFilter == null || note.getTier().startsWith(tierFilter))
-					if (viewer == null || note.hasPermission(viewer))
-						result.add(convert(note));
-		return result;
+		if (tierFilter == null)
+			return convertNotes(repository.get(player), viewer);
+
+		Note note = repository.get(player, tierFilter);
+		if (note == null || (viewer != null && !note.isVisible(viewer)))
+			return new ArrayList<>();
+
+		return Collections.singletonList(convert(note));
 	}
 
 	@Override
@@ -98,9 +97,10 @@ public class NoteManager implements IConfigurationChanged
 		noteFormat = configuration.getConfigValueAsString("format.note").replace("\\n", "\n");
 		dateFormat = configuration.getConfigValueAsString("format.date").replace("\\n", "\n");
 		tierFormat = configuration.getConfigValuesAsMap("format.tier");
-		if (tierFormat != null)
-			for (String tier : tierFormat.keySet())
-				tierFormat.put(tier, tierFormat.get(tier).replace("\\n", "\n"));
+		if (tierFormat == null)
+			return;
+
+		tierFormat.replaceAll((t, v) -> tierFormat.get(t).replace("\\n", "\n"));
 	}
 
 	private String formatMessageForGame(String tier, IPlayer player, Note message)
@@ -113,6 +113,27 @@ public class NoteManager implements IConfigurationChanged
 		return String.format(consoleFormat, tier, player.getPrettyName(), convert(message));
 	}
 
+	private List<String> convertNotes(List<Note> notes, IPlayer viewer)
+	{
+		List<String> result = new ArrayList<>();
+		if (notes == null || notes.isEmpty())
+			return result;
+
+		if (viewer == null)
+		{
+			for (Note note : notes)
+				result.add(convert(note));
+
+			return result;
+		}
+
+		for (Note note : notes)
+			if (note.isVisible(viewer))
+				result.add(convert(note));
+
+		return result;
+	}
+
 	private String convert(Note note)
 	{
 		if (note == null)
@@ -123,11 +144,11 @@ public class NoteManager implements IConfigurationChanged
 		);
 	}
 
-	private String convert(DateTime date)
+	private String convert(Instant date)
 	{
 		if (date == null)
 			return "-";
-		return date.toString(dateFormat);
+		return DateFormatUtils.format(date.toEpochMilli(), dateFormat);
 	}
 
 	private final NoteRepository repository;

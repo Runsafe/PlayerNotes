@@ -18,7 +18,7 @@ public class ClearCommand extends AsyncCommand
 			"runsafe.note.clear.<tier>",
 			scheduler,
 			new Player().require(),
-			new TierArgument(manager)
+			new TierArgument(manager).require()
 		);
 		this.manager = manager;
 	}
@@ -26,20 +26,16 @@ public class ClearCommand extends AsyncCommand
 	@Override
 	public String OnAsyncExecute(ICommandExecutor executor, IArgumentList params)
 	{
-		IPlayer target = params.getValue("player");
-		if (target == null)
-			return null;
-		String tier = params.getValue("tier");
+		IPlayer target = params.getRequired("player");
+		String tier = params.getRequired("tier");
 		if (tier.equals("*"))
 		{
 			manager.clearAllNotesForPlayer(target);
 			return String.format("All notes for %s cleared.", target.getPrettyName());
 		}
-		else
-		{
-			manager.clearNoteForPlayer(target, tier);
-			return String.format("%s note for %s cleared.", tier, target.getPrettyName());
-		}
+
+		manager.clearNoteForPlayer(target, tier);
+		return String.format("%s note for %s cleared.", tier, target.getPrettyName());
 	}
 
 	private final NoteManager manager;

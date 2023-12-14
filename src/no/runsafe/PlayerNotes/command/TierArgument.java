@@ -28,7 +28,7 @@ public class TierArgument extends RequiredArgument implements ITabComplete, IVal
 			return alternatives;
 
 		String match = filter.toLowerCase();
-		List<String> options = new ArrayList<String>(alternatives.size());
+		List<String> options = new ArrayList<>(alternatives.size());
 		for (String option : alternatives)
 			if (option.toLowerCase().startsWith(match))
 				options.add(option);
@@ -40,7 +40,7 @@ public class TierArgument extends RequiredArgument implements ITabComplete, IVal
 	public String expand(ICommandExecutor executor, @Nullable String filter)
 	{
 		List<String> alternatives = getAlternatives(null, filter);
-		return alternatives.isEmpty() || alternatives.size() > 1 ? null : alternatives.get(0);
+		return alternatives.size() != 1 ? null : alternatives.get(0);
 	}
 
 	private final NoteManager manager;
