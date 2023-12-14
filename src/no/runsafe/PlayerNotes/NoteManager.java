@@ -86,10 +86,36 @@ public class NoteManager implements IConfigurationChanged
 		if (notes == null || notes.isEmpty())
 			return result;
 
-		for (Note note : notes)
-			if (tierFilter == null || note.getTier().startsWith(tierFilter))
-				if (viewer == null || note.hasPermission(viewer))
+		if (tierFilter == null && viewer == null)
+		{
+			for (Note note : notes)
+				result.add(convert(note));
+
+			return result;
+		}
+
+		if (tierFilter == null)
+		{
+			for (Note note : notes)
+				if (note.hasPermission(viewer))
 					result.add(convert(note));
+
+			return result;
+		}
+
+		if (viewer == null)
+		{
+			for (Note note : notes)
+				if (note.getTier().startsWith(tierFilter))
+					result.add(convert(note));
+
+			return result;
+		}
+
+		for (Note note : notes)
+			if (note.getTier().startsWith(tierFilter) && note.hasPermission(viewer))
+				result.add(convert(note));
+
 		return result;
 	}
 
